@@ -410,7 +410,10 @@ export function Tetris({ difficulty, onExit }) {
       if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
       e.preventDefault();
 
-      // Immediate first action
+      // Ignore browser auto-repeat for rotation (prevents double rotation)
+      if (e.key === 'ArrowUp' && e.repeat) return;
+
+      // Immediate first action on new key press
       if (activeKey !== e.key) {
         clearTimeout(dasTimer);
         clearInterval(dasInterval);

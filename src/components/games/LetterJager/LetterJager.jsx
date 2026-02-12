@@ -218,6 +218,31 @@ export function LetterJager({ difficulty, onExit }) {
           setPlayer(newPlayer);
           playerRef.current = newPlayer;
 
+          // Check creature collision after player moves
+          if (!isInvincibleRef.current) {
+            const hit = creaturesRef.current.some((c) => c.row === newRow && c.col === newCol);
+            if (hit) {
+              const newLives = livesRef.current - 1;
+              setLives(newLives);
+              livesRef.current = newLives;
+              setHitCount((c) => c + 1);
+              playSoundRef.current('hit');
+
+              if (newLives <= 0) {
+                setGameStatus('lost');
+                gameStatusRef.current = 'lost';
+                return;
+              }
+
+              setIsInvincible(true);
+              isInvincibleRef.current = true;
+              setTimeout(() => {
+                setIsInvincible(false);
+                isInvincibleRef.current = false;
+              }, GAME_CONFIG.INVINCIBILITY_DURATION);
+            }
+          }
+
           // Check letter collection
           const nextIdx = collectedRef.current.length;
           const currentLetters = lettersRef.current;

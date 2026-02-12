@@ -48,16 +48,16 @@ function placeNumbers(gridSize, occupiedSet, count) {
   }));
 }
 
-// Place obstacles away from snake spawn (center area)
+// Place obstacles away from snake spawn
+// Never place on the spawn row (snake starts moving right along it)
 function placeObstacles(gridSize, count, spawnSet) {
   if (count === 0) return [];
   const available = [];
   const centerRow = Math.floor(gridSize.rows / 2);
-  const centerCol = Math.floor(gridSize.cols / 2);
   for (let r = 0; r < gridSize.rows; r++) {
+    // Exclude the entire spawn row so the snake never hits an obstacle immediately
+    if (r === centerRow) continue;
     for (let c = 0; c < gridSize.cols; c++) {
-      // Keep a buffer zone around the center spawn
-      if (Math.abs(r - centerRow) <= 2 && Math.abs(c - centerCol) <= 2) continue;
       if (spawnSet.has(`${r},${c}`)) continue;
       available.push({ row: r, col: c });
     }
@@ -435,7 +435,6 @@ export function Snake({ difficulty, onExit }) {
 
       <SnakeHUD
         score={score}
-        lives={lives}
         targetNumber={targetNumber}
         maxNumber={maxNumber}
         currentRound={currentRound}

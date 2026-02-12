@@ -3,10 +3,10 @@
 
 import { DUTCH_TEXT } from '../../../constants/dutch-text';
 
-export function SnakeHUD({ score, lives, targetNumber, maxNumber, currentRound, totalRounds }) {
+export function SnakeHUD({ score, targetNumber, maxNumber, currentRound, totalRounds }) {
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm px-4 py-3 mb-3 w-full max-w-2xl mx-auto">
-      {/* Top row: score, round, and lives */}
+      {/* Top row: score and round */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="font-display font-bold text-lg text-text-primary">
@@ -21,14 +21,6 @@ export function SnakeHUD({ score, lives, targetNumber, maxNumber, currentRound, 
           <span className="font-display font-bold text-md text-text-secondary">
             {DUTCH_TEXT.snake.hud.round} {currentRound}/{totalRounds}
           </span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          {Array.from({ length: 3 }, (_, i) => (
-            <span key={i} className="text-2xl" role="img" aria-label="leven">
-              {i < lives ? '❤️' : '🖤'}
-            </span>
-          ))}
         </div>
       </div>
 
