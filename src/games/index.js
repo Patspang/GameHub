@@ -4,6 +4,7 @@
 import { LetterJager } from '../components/games/LetterJager/LetterJager';
 import { Snake } from '../components/games/Snake/Snake';
 import { Tetris } from '../components/games/Tetris/Tetris';
+import { LetterLeren } from '../components/games/LetterLeren/LetterLeren';
 
 export const GAMES = {
   'letter-jager': {
@@ -32,5 +33,14 @@ export const GAMES = {
     description: 'Stapel blokken',
     available: true,
     color: 'from-primary-coral to-primary-yellow',
+  },
+  'letter-leren': {
+    id: 'letter-leren',
+    component: LetterLeren,
+    name: 'Letter Leren',
+    icon: '📚',
+    description: 'Leer letters en woorden met plaatjes',
+    available: true,
+    color: 'from-primary-blue to-primary-coral',
   },
 };

@@ -119,6 +119,20 @@ export const TETRIS_CONFIG = {
   DAS_REPEAT: 50,
 };
 
+// Letter Leren configuration
+export const LETTER_LEREN_CONFIG = {
+  WORDS_PER_ROUND: 5,
+  TILE_COUNT: 10,
+  CELEBRATION_DELAY: 2000,
+  SCORING: {
+    EASY_WORD: 100,
+    NORMAL_LETTER: 50,
+    NORMAL_WORD_BONUS: 200,
+    HARD_LETTER: 50,
+    HARD_WORD_BONUS: 300,
+  },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

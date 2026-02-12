@@ -37,6 +37,11 @@ export const DUTCH_TEXT = {
         normal: 'Alle blokken, normaal',
         hard: 'Snel, hoog level',
       },
+      'letter-leren': {
+        easy: 'Kies het juiste woord',
+        normal: 'Tik letters in volgorde',
+        hard: 'Typ het woord zelf',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -66,6 +71,19 @@ export const DUTCH_TEXT = {
     useArrows: 'Gebruik de knoppen om te bewegen',
     collectLetters: 'Verzamel letters in de juiste volgorde',
     avoidCreatures: 'Blijf weg van de vriendjes',
+  },
+  letterLeren: {
+    name: 'Letter Leren',
+    instructions: {
+      howToPlay: 'Leer letters en woorden met plaatjes!',
+      tapCorrectWord: 'Tik op het juiste woord',
+      tapLettersInOrder: 'Tik de letters in de juiste volgorde',
+      typeTheWord: 'Typ het woord letter voor letter',
+    },
+    feedback: {
+      wordComplete: 'Woord compleet!',
+      allComplete: 'Alle woorden goed! Geweldig!',
+    },
   },
   tetris: {
     name: 'Tetris',
