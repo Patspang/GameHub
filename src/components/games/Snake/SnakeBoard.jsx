@@ -29,7 +29,7 @@ export function SnakeBoard({ gridSize, snake, numbers, targetNumber, obstacles, 
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden shadow-md select-none"
+      className="relative rounded-xl shadow-md select-none"
       style={{
         width: boardWidth,
         height: boardHeight,

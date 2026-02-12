@@ -32,6 +32,11 @@ export const DUTCH_TEXT = {
         normal: 'Tel tot 8, normaal',
         hard: 'Tel tot 10, snel',
       },
+      'tetris': {
+        easy: 'Langzaam, minder blokken',
+        normal: 'Alle blokken, normaal',
+        hard: 'Snel, hoog level',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -61,6 +66,26 @@ export const DUTCH_TEXT = {
     useArrows: 'Gebruik de knoppen om te bewegen',
     collectLetters: 'Verzamel letters in de juiste volgorde',
     avoidCreatures: 'Blijf weg van de vriendjes',
+  },
+  tetris: {
+    name: 'Tetris',
+    instructions: {
+      howToPlay: 'Stapel de blokken en maak rijen vol!',
+      useArrows: 'Gebruik de knoppen om blokken te bewegen en draaien',
+    },
+    hud: {
+      level: 'Level',
+      lines: 'Rijen',
+      next: 'Volgende',
+    },
+    feedback: {
+      lineClear: 'Goed zo!',
+      tetris: 'TETRIS! Geweldig!',
+      levelUp: 'Level omhoog!',
+      gameOver: 'Spel afgelopen',
+      tryAgain: 'Probeer nog eens!',
+      greatJob: 'Super gedaan!',
+    },
   },
   snake: {
     name: 'Tel Slang',

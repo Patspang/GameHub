@@ -3,6 +3,7 @@
 
 import { LetterJager } from '../components/games/LetterJager/LetterJager';
 import { Snake } from '../components/games/Snake/Snake';
+import { Tetris } from '../components/games/Tetris/Tetris';
 
 export const GAMES = {
   'letter-jager': {
@@ -25,11 +26,11 @@ export const GAMES = {
   },
   'tetris': {
     id: 'tetris',
-    component: null,
+    component: Tetris,
     name: 'Tetris',
     icon: '🧱',
     description: 'Stapel blokken',
-    available: false,
+    available: true,
     color: 'from-primary-coral to-primary-yellow',
   },
 };

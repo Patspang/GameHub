@@ -88,6 +88,37 @@ export const SNAKE_CONFIG = {
   STARTING_LIVES: 3,
 };
 
+// Tetris-specific configuration
+export const TETRIS_CONFIG = {
+  BOARD_WIDTH: 10,
+  BOARD_HEIGHT: {
+    [DIFFICULTY.EASY]: 16,
+    [DIFFICULTY.NORMAL]: 18,
+    [DIFFICULTY.HARD]: 20,
+  },
+  BASE_SPEED: {
+    [DIFFICULTY.EASY]: 800,
+    [DIFFICULTY.NORMAL]: 600,
+    [DIFFICULTY.HARD]: 400,
+  },
+  START_LEVEL: {
+    [DIFFICULTY.EASY]: 1,
+    [DIFFICULTY.NORMAL]: 1,
+    [DIFFICULTY.HARD]: 3,
+  },
+  SPEED_DECAY: 0.9,
+  MIN_SPEED: 100,
+  LINES_PER_LEVEL: 10,
+  USE_ALL_PIECES: {
+    [DIFFICULTY.EASY]: false,
+    [DIFFICULTY.NORMAL]: true,
+    [DIFFICULTY.HARD]: true,
+  },
+  LINE_SCORES: [0, 100, 300, 500, 800],
+  DAS_INITIAL: 170,
+  DAS_REPEAT: 50,
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

@@ -13,7 +13,7 @@ export function Header({ onHomeClick, showHomeButton = false }) {
         className="font-display text-2xl font-bold text-text-primary cursor-pointer"
         onClick={onHomeClick}
       >
-        🎮 Letter Jager
+        🎮 Game Hub
       </h1>
 
       <div className="flex items-center gap-3">

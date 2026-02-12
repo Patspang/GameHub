@@ -1,5 +1,5 @@
 // Renders a single snake segment (head or body)
-// Head shows a snake emoji, body segments fade from dark to light green toward the tail
+// Head is a larger darker green circle, body fades from dark to light green toward the tail
 
 export function SnakeSegment({ segment, index, tileSize, totalLength }) {
   const isHead = index === 0;
@@ -17,18 +17,15 @@ export function SnakeSegment({ segment, index, tileSize, totalLength }) {
         top: segment.row * tileSize + offset,
         width: size,
         height: size,
-        transition: 'left 0.08s linear, top 0.08s linear',
       }}
     >
       <div
-        className="w-full h-full rounded-full shadow-sm flex items-center justify-center"
+        className="w-full h-full rounded-full shadow-sm"
         style={{
-          backgroundColor: isHead ? '#4A9E4A' : `rgba(76, 153, 76, ${opacity})`,
-          fontSize: isHead ? size * 0.55 : 0,
+          backgroundColor: isHead ? '#3D8B3D' : `rgba(76, 153, 76, ${opacity})`,
+          border: isHead ? '2px solid #2D6B2D' : 'none',
         }}
-      >
-        {isHead && <span className="select-none">🐍</span>}
-      </div>
+      />
     </div>
   );
 }
