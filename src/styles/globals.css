@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* === Design System Theme === */
+@theme {
+  /* Primary Colors - Soft & Playful */
+  --color-primary-blue: #6B9BD1;
+  --color-primary-green: #7FBF7F;
+  --color-primary-yellow: #F4D35E;
+  --color-primary-coral: #F19C79;
+
+  /* Backgrounds */
+  --color-bg-primary: #FFF9F0;
+  --color-bg-secondary: #E8F4F8;
+  --color-bg-maze: #D4E7D7;
+
+  /* Game Elements */
+  --color-letter: #5A67D8;
+  --color-player: #F59E0B;
+  --color-creature-1: #A78BFA;
+  --color-creature-2: #34D399;
+  --color-creature-3: #F472B6;
+  --color-creature-4: #60A5FA;
+
+  /* Text */
+  --color-text-primary: #2D3748;
+  --color-text-secondary: #4A5568;
+
+  /* Feedback */
+  --color-success: #48BB78;
+  --color-error: #FC8181;
+
+  /* Fonts */
+  --font-display: "Fredoka", "Comic Sans MS", cursive;
+  --font-body: "Comic Neue", "Arial Rounded", sans-serif;
+
+  /* Font sizes - Large for young readers */
+  --text-xxl: 3rem;
+  --text-xl: 2rem;
+  --text-lg: 1.5rem;
+  --text-md: 1.25rem;
+  --text-sm: 1rem;
+}
+
+/* === Base Styles === */
+html {
+  /* Prevent pull-to-refresh and overscroll bounce on tablet */
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Prevent iOS Safari bounce and accidental zoom */
+  overscroll-behavior: none;
+  -webkit-touch-callout: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Prevent text selection during gameplay */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* Smooth transitions for interactive elements */
+.game-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Only apply hover effects on devices that support hover (not tablets) */
+@media (hover: hover) {
+  .game-interactive:hover {
+    transform: scale(1.05);
+  }
+}
+
+.game-interactive:active {
+  transform: scale(0.95);
+}
+
+/* === Game Animations === */
+
+/* Confetti falling particles */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall {
+  animation: confetti-fall 2s ease-in forwards;
+}
+
+/* Letter collect sparkle - brief scale up and fade */
+@keyframes letter-sparkle {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-letter-sparkle {
+  animation: letter-sparkle 0.4s ease-out forwards;
+}
