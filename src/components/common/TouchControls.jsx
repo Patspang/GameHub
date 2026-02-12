@@ -1,12 +1,11 @@
 // On-screen D-pad for tablet/touch devices
 // Large buttons positioned at bottom of screen for easy thumb access
-// Fires direction callbacks on touch start (not touch end) for responsiveness
+// Uses onPointerDown for unified touch + mouse handling (fires only once)
 
 import { useCallback } from 'react';
 
 export function TouchControls({ onDirection }) {
-  // Use onTouchStart for instant response, prevent default to avoid scrolling
-  const handleTouch = useCallback((direction) => (e) => {
+  const handlePointer = useCallback((direction) => (e) => {
     e.preventDefault();
     onDirection(direction);
   }, [onDirection]);
@@ -16,8 +15,7 @@ export function TouchControls({ onDirection }) {
       <div className="relative" style={{ width: 200, height: 200 }}>
         {/* Up */}
         <button
-          onTouchStart={handleTouch('up')}
-          onMouseDown={() => onDirection('up')}
+          onPointerDown={handlePointer('up')}
           className="absolute top-0 left-1/2 -translate-x-1/2
             w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
             shadow-lg active:scale-90 active:bg-primary-blue/80
@@ -30,8 +28,7 @@ export function TouchControls({ onDirection }) {
 
         {/* Down */}
         <button
-          onTouchStart={handleTouch('down')}
-          onMouseDown={() => onDirection('down')}
+          onPointerDown={handlePointer('down')}
           className="absolute bottom-0 left-1/2 -translate-x-1/2
             w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
             shadow-lg active:scale-90 active:bg-primary-blue/80
@@ -44,8 +41,7 @@ export function TouchControls({ onDirection }) {
 
         {/* Left */}
         <button
-          onTouchStart={handleTouch('left')}
-          onMouseDown={() => onDirection('left')}
+          onPointerDown={handlePointer('left')}
           className="absolute left-0 top-1/2 -translate-y-1/2
             w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
             shadow-lg active:scale-90 active:bg-primary-blue/80
@@ -58,8 +54,7 @@ export function TouchControls({ onDirection }) {
 
         {/* Right */}
         <button
-          onTouchStart={handleTouch('right')}
-          onMouseDown={() => onDirection('right')}
+          onPointerDown={handlePointer('right')}
           className="absolute right-0 top-1/2 -translate-y-1/2
             w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
             shadow-lg active:scale-90 active:bg-primary-blue/80
