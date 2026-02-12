@@ -11,7 +11,7 @@ export function App() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
   // eslint-disable-next-line no-unused-vars
-  const [highScores, setHighScores] = useLocalStorage('letter-jager-scores', {});
+  const [highScores, setHighScores] = useLocalStorage('gamehub-scores', {});
 
   const handleGameSelect = (gameId) => {
     setSelectedGame(gameId);

@@ -44,6 +44,50 @@ export const GAME_CONFIG = {
   TARGET_FPS: 60,
 };
 
+// Snake-specific configuration
+export const SNAKE_CONFIG = {
+  GRID_SIZE: {
+    [DIFFICULTY.EASY]: { rows: 10, cols: 10 },
+    [DIFFICULTY.NORMAL]: { rows: 14, cols: 14 },
+    [DIFFICULTY.HARD]: { rows: 18, cols: 18 },
+  },
+  SPEED: {
+    [DIFFICULTY.EASY]: 350,
+    [DIFFICULTY.NORMAL]: 250,
+    [DIFFICULTY.HARD]: 180,
+  },
+  NUMBER_RANGE: {
+    [DIFFICULTY.EASY]: 5,
+    [DIFFICULTY.NORMAL]: 8,
+    [DIFFICULTY.HARD]: 10,
+  },
+  ROUNDS_TO_WIN: {
+    [DIFFICULTY.EASY]: 2,
+    [DIFFICULTY.NORMAL]: 3,
+    [DIFFICULTY.HARD]: 4,
+  },
+  WALL_WRAPS: {
+    [DIFFICULTY.EASY]: true,
+    [DIFFICULTY.NORMAL]: false,
+    [DIFFICULTY.HARD]: false,
+  },
+  SELF_COLLISION_KILLS: {
+    [DIFFICULTY.EASY]: false,
+    [DIFFICULTY.NORMAL]: true,
+    [DIFFICULTY.HARD]: true,
+  },
+  OBSTACLE_COUNT: {
+    [DIFFICULTY.EASY]: 0,
+    [DIFFICULTY.NORMAL]: 0,
+    [DIFFICULTY.HARD]: 8,
+  },
+  INITIAL_LENGTH: 3,
+  NUMBER_SCORE: 100,
+  ROUND_COMPLETE_BONUS: 500,
+  WRONG_NUMBER_PENALTY: 50,
+  STARTING_LIVES: 3,
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

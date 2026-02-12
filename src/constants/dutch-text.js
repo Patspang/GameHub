@@ -22,9 +22,16 @@ export const DUTCH_TEXT = {
       hard: 'Moeilijk',
     },
     difficultyDescription: {
-      easy: '3-4 letter woorden',
-      normal: '5-6 letter woorden',
-      hard: '7-8 letter woorden',
+      'letter-jager': {
+        easy: '3-4 letter woorden',
+        normal: '5-6 letter woorden',
+        hard: '7-8 letter woorden',
+      },
+      'snake': {
+        easy: 'Tel tot 5, langzaam',
+        normal: 'Tel tot 8, normaal',
+        hard: 'Tel tot 10, snel',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -54,5 +61,22 @@ export const DUTCH_TEXT = {
     useArrows: 'Gebruik de knoppen om te bewegen',
     collectLetters: 'Verzamel letters in de juiste volgorde',
     avoidCreatures: 'Blijf weg van de vriendjes',
+  },
+  snake: {
+    name: 'Tel Slang',
+    instructions: {
+      howToPlay: 'Eet de nummers in de juiste volgorde!',
+      useArrows: 'Gebruik de knoppen om de slang te besturen',
+    },
+    hud: {
+      target: 'Zoek',
+      round: 'Ronde',
+    },
+    feedback: {
+      roundComplete: 'Ronde compleet!',
+      gameWon: 'Je hebt gewonnen! Gefeliciteerd!',
+      gameOver: 'Spel afgelopen',
+      tryAgain: 'Bijna! Probeer nog eens!',
+    },
   },
 };

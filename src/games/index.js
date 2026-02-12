@@ -2,6 +2,7 @@
 // Set available: true and provide a component to make a game playable
 
 import { LetterJager } from '../components/games/LetterJager/LetterJager';
+import { Snake } from '../components/games/Snake/Snake';
 
 export const GAMES = {
   'letter-jager': {
@@ -15,11 +16,11 @@ export const GAMES = {
   },
   'snake': {
     id: 'snake',
-    component: null,
-    name: 'Snake',
+    component: Snake,
+    name: 'Tel Slang',
     icon: '🐍',
-    description: 'Eet appels en groei',
-    available: false,
+    description: 'Eet nummers in de juiste volgorde',
+    available: true,
     color: 'from-primary-green to-primary-yellow',
   },
   'tetris': {

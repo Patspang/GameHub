@@ -12,9 +12,9 @@ import { useSoundEffects } from '../../../hooks/useSoundEffects';
 import { Maze } from './Maze';
 import { GameHUD } from './GameHUD';
 import { GameOverScreen } from './GameOverScreen';
-import { TouchControls } from './TouchControls';
-import { Confetti } from './Confetti';
-import { FlashOverlay } from './FlashOverlay';
+import { TouchControls } from '../../common/TouchControls';
+import { Confetti } from '../../common/Confetti';
+import { FlashOverlay } from '../../common/FlashOverlay';
 import { Button } from '../../common/Button';
 
 // Movement deltas for each direction
@@ -39,7 +39,7 @@ export function LetterJager({ difficulty, onExit }) {
   const [currentWord, setCurrentWord] = useState('');
   const [collectedLetters, setCollectedLetters] = useState([]);
   const [isInvincible, setIsInvincible] = useState(false);
-  const [highScores, setHighScores] = useLocalStorage('letter-jager-scores', {});
+  const [highScores, setHighScores] = useLocalStorage('gamehub-scores', {});
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [hitCount, setHitCount] = useState(0); // increments on each hit to trigger flash
 

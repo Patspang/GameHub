@@ -7,30 +7,20 @@ import { DIFFICULTY } from '../../constants/gameConfig';
 import { Button } from './Button';
 import { ScoreDisplay } from './ScoreDisplay';
 
-const DIFFICULTY_OPTIONS = [
-  {
-    key: DIFFICULTY.EASY,
-    label: DUTCH_TEXT.menu.difficulty.easy,
-    description: DUTCH_TEXT.menu.difficultyDescription.easy,
-    variant: 'success',
-  },
-  {
-    key: DIFFICULTY.NORMAL,
-    label: DUTCH_TEXT.menu.difficulty.normal,
-    description: DUTCH_TEXT.menu.difficultyDescription.normal,
-    variant: 'primary',
-  },
-  {
-    key: DIFFICULTY.HARD,
-    label: DUTCH_TEXT.menu.difficulty.hard,
-    description: DUTCH_TEXT.menu.difficultyDescription.hard,
-    variant: 'warning',
-  },
-];
+function getDifficultyOptions(gameId) {
+  const descriptions = DUTCH_TEXT.menu.difficultyDescription[gameId]
+    || DUTCH_TEXT.menu.difficultyDescription['letter-jager'];
+  return [
+    { key: DIFFICULTY.EASY, label: DUTCH_TEXT.menu.difficulty.easy, description: descriptions.easy, variant: 'success' },
+    { key: DIFFICULTY.NORMAL, label: DUTCH_TEXT.menu.difficulty.normal, description: descriptions.normal, variant: 'primary' },
+    { key: DIFFICULTY.HARD, label: DUTCH_TEXT.menu.difficulty.hard, description: descriptions.hard, variant: 'warning' },
+  ];
+}
 
 export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores }) {
   const game = GAMES[gameId];
   if (!game) return null;
+  const difficultyOptions = getDifficultyOptions(gameId);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 py-8">
@@ -42,7 +32,7 @@ export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores }) {
 
       {/* Difficulty buttons */}
       <div className="flex flex-col gap-4 w-full max-w-md mb-8">
-        {DIFFICULTY_OPTIONS.map((option) => (
+        {difficultyOptions.map((option) => (
           <Button
             key={option.key}
             variant={option.variant}
@@ -61,7 +51,7 @@ export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores }) {
           ⭐ {DUTCH_TEXT.menu.highScore}
         </h3>
         <div className="space-y-2">
-          {DIFFICULTY_OPTIONS.map((option) => (
+          {difficultyOptions.map((option) => (
             <div key={option.key} className="flex justify-between font-body text-text-secondary">
               <span>{option.label}</span>
               <span className="font-bold">{highScores?.[option.key] || 0}</span>
