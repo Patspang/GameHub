@@ -133,6 +133,22 @@ export const LETTER_LEREN_CONFIG = {
   },
 };
 
+// Muntenkluis (addition math game) configuration
+export const MUNTENKLUIS_CONFIG = {
+  SUMS_PER_ROUND: 10,
+  CELEBRATION_DELAY: 1500,
+  MAX_SUM: {
+    [DIFFICULTY.EASY]: 5,
+    [DIFFICULTY.NORMAL]: 10,
+    [DIFFICULTY.HARD]: 20,
+  },
+  SCORING: {
+    [DIFFICULTY.EASY]: 100,
+    [DIFFICULTY.NORMAL]: 150,
+    [DIFFICULTY.HARD]: 200,
+  },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

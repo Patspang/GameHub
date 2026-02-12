@@ -42,6 +42,11 @@ export const DUTCH_TEXT = {
         normal: 'Tik letters in volgorde',
         hard: 'Typ het woord zelf',
       },
+      'muntenkluis': {
+        easy: 'Sommen tot 5',
+        normal: 'Sommen tot 10',
+        hard: 'Sommen tot 20',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -103,6 +108,20 @@ export const DUTCH_TEXT = {
       gameOver: 'Spel afgelopen',
       tryAgain: 'Probeer nog eens!',
       greatJob: 'Super gedaan!',
+    },
+  },
+  muntenkluis: {
+    name: "Dagobert's Muntenkluis",
+    instructions: {
+      howToPlay: 'Tel de munten en kies het juiste antwoord!',
+      tapCorrectAnswer: 'Tik op het juiste getal',
+      countTheCoins: 'Tel de munten om het antwoord te vinden',
+    },
+    feedback: {
+      correct: ['Goed zo!', 'Super!', 'Geweldig!', 'Knap!', 'Top!'],
+      wrong: ['Bijna!', 'Probeer nog eens!', 'Je kan het!', 'Nog een keer!'],
+      allComplete: 'De kluis zit vol! Geweldig!',
+      vaultFull: 'De kluis zit helemaal vol!',
     },
   },
   snake: {

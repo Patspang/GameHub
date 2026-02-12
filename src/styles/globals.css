@@ -143,3 +143,23 @@ h1, h2, h3, h4, h5, h6 {
 .animate-round-banner {
   animation: round-banner 0.5s ease-out forwards;
 }
+
+/* Coin rolling into vault from left */
+@keyframes coin-roll {
+  0% {
+    transform: translateX(0) translateY(-50%) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(140px) translateY(-50%) rotate(720deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(140px) translateY(-50%) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-coin-roll {
+  animation: coin-roll 0.7s ease-in forwards;
+}

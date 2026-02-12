@@ -5,6 +5,7 @@ import { LetterJager } from '../components/games/LetterJager/LetterJager';
 import { Snake } from '../components/games/Snake/Snake';
 import { Tetris } from '../components/games/Tetris/Tetris';
 import { LetterLeren } from '../components/games/LetterLeren/LetterLeren';
+import { Muntenkluis } from '../components/games/Muntenkluis/Muntenkluis';
 
 export const GAMES = {
   'letter-jager': {
@@ -42,5 +43,14 @@ export const GAMES = {
     description: 'Leer letters en woorden met plaatjes',
     available: true,
     color: 'from-primary-blue to-primary-coral',
+  },
+  'muntenkluis': {
+    id: 'muntenkluis',
+    component: Muntenkluis,
+    name: "Dagobert's Muntenkluis",
+    icon: '🪙',
+    description: 'Tel munten en oefen met optellen',
+    available: true,
+    color: 'from-primary-yellow to-primary-coral',
   },
 };
