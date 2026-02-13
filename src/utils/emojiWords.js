@@ -28,6 +28,21 @@ const DUTCH_WORDS = [
   { emoji: '🦆', word: 'EEND' },
   { emoji: '🦷', word: 'TAND' },
   { emoji: '🧦', word: 'SOK' },
+  // 5-letter words (for moeilijk mode)
+  { emoji: '🍎', word: 'APPEL' },
+  { emoji: '🐴', word: 'PAARD' },
+  { emoji: '🌸', word: 'BLOEM' },
+  { emoji: '🪑', word: 'STOEL' },
+  { emoji: '🐦', word: 'VOGEL' },
+  { emoji: '🚲', word: 'FIETS' },
+  { emoji: '🐍', word: 'SLANG' },
+  { emoji: '🍰', word: 'TAART' },
+  { emoji: '🎹', word: 'PIANO' },
+  { emoji: '🦁', word: 'LEEUW' },
+  { emoji: '🍕', word: 'PIZZA' },
+  { emoji: '🍇', word: 'DRUIF' },
+  { emoji: '🚂', word: 'TREIN' },
+  { emoji: '🥄', word: 'LEPEL' },
 ];
 
 const ENGLISH_WORDS = [

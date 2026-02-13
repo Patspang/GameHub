@@ -122,13 +122,11 @@ export const TETRIS_CONFIG = {
 // Letter Leren configuration
 export const LETTER_LEREN_CONFIG = {
   WORDS_PER_ROUND: 5,
-  TILE_COUNT: 10,
   CELEBRATION_DELAY: 2000,
   SCORING: {
     EASY_WORD: 100,
     NORMAL_WORD: 150,
-    HARD_LETTER: 50,
-    HARD_WORD_BONUS: 300,
+    HARD_WORD: 200,
   },
 };
 

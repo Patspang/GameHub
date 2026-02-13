@@ -43,7 +43,7 @@ export const DUTCH_TEXT = {
       'letter-leren': {
         easy: 'Woorden van 3 letters',
         normal: 'Woorden van 4 letters',
-        hard: 'Tik letters in volgorde',
+        hard: 'Woorden van 5 letters',
       },
       'muntenkluis': {
         easy: 'Sommen tot 5',

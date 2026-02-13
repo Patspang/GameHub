@@ -1,10 +1,6 @@
-// Large emoji display with letter progress slots
-// Shows the emoji prominently, and for Hard mode, letter slots below
+// Large emoji display with letter reveal on celebration
 
-export function EmojiDisplay({ emoji, word, selectedLetters, difficulty, showCompleted }) {
-  const isHard = difficulty === 'moeilijk';
-  const showSlots = isHard || showCompleted;
-
+export function EmojiDisplay({ emoji, word, showCompleted }) {
   return (
     <div className="flex flex-col items-center">
       {/* Large emoji */}
@@ -12,26 +8,17 @@ export function EmojiDisplay({ emoji, word, selectedLetters, difficulty, showCom
         {emoji}
       </div>
 
-      {/* Letter slots: always for Normal/Hard, only during celebration for Easy */}
-      {showSlots && (
+      {/* Letter slots: revealed during celebration */}
+      {showCompleted && (
         <div className="flex items-center justify-center gap-2 mt-2">
-          {word.split('').map((letter, i) => {
-            const isRevealed = showCompleted || i < selectedLetters.length;
-            return (
-              <span
-                key={i}
-                className={`
-                  font-display font-bold text-3xl w-14 h-14 flex items-center justify-center
-                  rounded-xl transition-all duration-200
-                  ${isRevealed
-                    ? 'bg-success text-white scale-110'
-                    : 'bg-bg-secondary text-text-secondary'}
-                `}
-              >
-                {isRevealed ? letter : '_'}
-              </span>
-            );
-          })}
+          {word.split('').map((letter, i) => (
+            <span
+              key={i}
+              className="font-display font-bold text-3xl w-14 h-14 flex items-center justify-center rounded-xl bg-success text-white scale-110 transition-all duration-200"
+            >
+              {letter}
+            </span>
+          ))}
         </div>
       )}
     </div>

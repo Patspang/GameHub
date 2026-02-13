@@ -31,27 +31,11 @@ export function drawPondBackground(width, height) {
   grass.fill({ color: GRASS_GREEN });
   container.addChild(grass);
 
-  // Darker grass border ring
-  const grassRing = new Graphics();
-  grassRing.ellipse(cx, cy, rx + 30, ry + 30);
-  grassRing.fill({ color: GRASS_DARK });
-  container.addChild(grassRing);
-
-  // Water layers for depth effect (dark → mid → light in center)
-  const waterOuter = new Graphics();
-  waterOuter.ellipse(cx, cy, rx, ry);
-  waterOuter.fill({ color: WATER_DARK });
-  container.addChild(waterOuter);
-
-  const waterMid = new Graphics();
-  waterMid.ellipse(cx, cy, rx * 0.85, ry * 0.85);
-  waterMid.fill({ color: WATER_MID });
-  container.addChild(waterMid);
-
-  const waterInner = new Graphics();
-  waterInner.ellipse(cx, cy, rx * 0.6, ry * 0.6);
-  waterInner.fill({ color: WATER_LIGHT });
-  container.addChild(waterInner);
+  // Single water ellipse with uniform color
+  const water = new Graphics();
+  water.ellipse(cx, cy, rx, ry);
+  water.fill({ color: WATER_LIGHT });
+  container.addChild(water);
 
   return { container, bounds: { centerX: cx, centerY: cy, radiusX: rx, radiusY: ry } };
 }
