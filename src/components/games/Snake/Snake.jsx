@@ -69,7 +69,7 @@ function placeObstacles(gridSize, count, spawnSet) {
   return available.slice(0, count);
 }
 
-export function Snake({ difficulty, onExit }) {
+export function Snake({ difficulty, onExit, onChangeDifficulty }) {
   const [gameStatus, setGameStatus] = useState('ready');
   const [snake, setSnake] = useState([]);
   const [numbers, setNumbers] = useState([]);
@@ -423,6 +423,7 @@ export function Snake({ difficulty, onExit }) {
           isNewHighScore={isNewHighScore}
           onRestart={initGame}
           onExit={onExit}
+          onChangeDifficulty={onChangeDifficulty}
         />
       </>
     );

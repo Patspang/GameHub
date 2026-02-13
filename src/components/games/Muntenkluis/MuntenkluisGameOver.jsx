@@ -4,7 +4,7 @@
 import { DUTCH_TEXT } from '../../../constants/dutch-text';
 import { Button } from '../../common/Button';
 
-export function MuntenkluisGameOver({ score, isNewHighScore, onRestart, onExit }) {
+export function MuntenkluisGameOver({ score, isNewHighScore, onRestart, onExit, onChangeDifficulty }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-8">
       <div className="text-6xl mb-4">🪙🪙🪙🪙🪙</div>
@@ -39,6 +39,9 @@ export function MuntenkluisGameOver({ score, isNewHighScore, onRestart, onExit }
       <div className="flex flex-col sm:flex-row gap-4">
         <Button variant="success" onClick={onRestart}>
           🔄 {DUTCH_TEXT.feedback.playAgain}
+        </Button>
+        <Button variant="ghost" onClick={onChangeDifficulty}>
+          🎚️ {DUTCH_TEXT.feedback.changeDifficulty}
         </Button>
         <Button variant="accent" onClick={onExit}>
           🏠 {DUTCH_TEXT.menu.backHome}

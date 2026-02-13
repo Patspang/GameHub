@@ -4,7 +4,7 @@
 import { DUTCH_TEXT } from '../../../constants/dutch-text';
 import { Button } from '../../common/Button';
 
-export function SnakeGameOver({ status, score, currentRound, totalRounds, isNewHighScore, onRestart, onExit }) {
+export function SnakeGameOver({ status, score, currentRound, totalRounds, isNewHighScore, onRestart, onExit, onChangeDifficulty }) {
   const isWin = status === 'won';
 
   return (
@@ -41,6 +41,9 @@ export function SnakeGameOver({ status, score, currentRound, totalRounds, isNewH
       <div className="flex flex-col sm:flex-row gap-4">
         <Button variant="success" onClick={onRestart}>
           🔄 {DUTCH_TEXT.feedback.playAgain}
+        </Button>
+        <Button variant="ghost" onClick={onChangeDifficulty}>
+          🎚️ {DUTCH_TEXT.feedback.changeDifficulty}
         </Button>
         <Button variant="accent" onClick={onExit}>
           🏠 {DUTCH_TEXT.menu.backHome}

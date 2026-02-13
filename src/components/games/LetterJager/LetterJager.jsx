@@ -27,7 +27,7 @@ const MOVE_DELTA = {
 
 const OPPOSITE_DIR = { up: 'down', down: 'up', left: 'right', right: 'left' };
 
-export function LetterJager({ difficulty, onExit }) {
+export function LetterJager({ difficulty, onExit, onChangeDifficulty }) {
   // Game state
   const [gameStatus, setGameStatus] = useState('ready'); // ready | playing | won | lost
   const [maze, setMaze] = useState(null);
@@ -380,6 +380,7 @@ export function LetterJager({ difficulty, onExit }) {
           isNewHighScore={isNewHighScore}
           onRestart={initGame}
           onExit={onExit}
+          onChangeDifficulty={onChangeDifficulty}
         />
       </>
     );

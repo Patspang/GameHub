@@ -17,10 +17,11 @@ function getDifficultyOptions(gameId) {
   ];
 }
 
-export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores }) {
+export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores, language, onLanguageChange }) {
   const game = GAMES[gameId];
   if (!game) return null;
   const difficultyOptions = getDifficultyOptions(gameId);
+  const showLanguageSelector = gameId === 'letter-leren';
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 py-8">
@@ -29,6 +30,30 @@ export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores }) {
       <h1 className="font-display text-4xl font-bold text-text-primary text-center mb-8">
         {game.name}
       </h1>
+
+      {/* Language selector (Letter Leren only) */}
+      {showLanguageSelector && (
+        <div className="flex gap-3 mb-6">
+          <button
+            onPointerDown={() => onLanguageChange('nl')}
+            className={`font-display font-bold text-lg px-6 py-3 rounded-full transition-all
+              ${language === 'nl'
+                ? 'bg-primary-blue text-white shadow-md scale-105'
+                : 'bg-white/60 text-text-secondary hover:bg-white/80'}`}
+          >
+            🇳🇱 {DUTCH_TEXT.menu.languages.nl}
+          </button>
+          <button
+            onPointerDown={() => onLanguageChange('en')}
+            className={`font-display font-bold text-lg px-6 py-3 rounded-full transition-all
+              ${language === 'en'
+                ? 'bg-primary-blue text-white shadow-md scale-105'
+                : 'bg-white/60 text-text-secondary hover:bg-white/80'}`}
+          >
+            🇬🇧 {DUTCH_TEXT.menu.languages.en}
+          </button>
+        </div>
+      )}
 
       {/* Difficulty buttons */}
       <div className="flex flex-col gap-4 w-full max-w-md mb-8">

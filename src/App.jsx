@@ -10,6 +10,7 @@ export function App() {
   const [currentScreen, setCurrentScreen] = useState(SCREENS.HOME);
   const [selectedGame, setSelectedGame] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
+  const [language, setLanguage] = useState('nl');
   // eslint-disable-next-line no-unused-vars
   const [highScores, setHighScores] = useLocalStorage('gamehub-scores', {});
 
@@ -26,6 +27,11 @@ export function App() {
   const handleBackToHome = () => {
     setCurrentScreen(SCREENS.HOME);
     setSelectedGame(null);
+    setDifficulty(null);
+  };
+
+  const handleBackToGameMenu = () => {
+    setCurrentScreen(SCREENS.GAME_MENU);
     setDifficulty(null);
   };
 
@@ -61,6 +67,8 @@ export function App() {
           onSelectDifficulty={handleDifficultySelect}
           onBack={handleBackToHome}
           highScores={gameHighScores}
+          language={language}
+          onLanguageChange={setLanguage}
         />
       )}
 
@@ -68,7 +76,9 @@ export function App() {
         <GameContainer
           gameId={selectedGame}
           difficulty={difficulty}
+          language={language}
           onExit={handleBackToHome}
+          onChangeDifficulty={handleBackToGameMenu}
         />
       )}
     </div>

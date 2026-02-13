@@ -5,7 +5,7 @@ import { GAMES } from '../../games';
 import { DUTCH_TEXT } from '../../constants/dutch-text';
 import { Button } from '../common/Button';
 
-export function GameContainer({ gameId, difficulty, onExit }) {
+export function GameContainer({ gameId, difficulty, language, onExit, onChangeDifficulty }) {
   const game = GAMES[gameId];
   const GameComponent = game?.component;
 
@@ -33,7 +33,9 @@ export function GameContainer({ gameId, difficulty, onExit }) {
   return (
     <GameComponent
       difficulty={difficulty}
+      language={language}
       onExit={onExit}
+      onChangeDifficulty={onChangeDifficulty}
     />
   );
 }

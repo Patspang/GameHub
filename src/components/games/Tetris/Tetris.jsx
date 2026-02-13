@@ -129,7 +129,7 @@ function getSpeed(difficulty, level) {
   );
 }
 
-export function Tetris({ difficulty, onExit }) {
+export function Tetris({ difficulty, onExit, onChangeDifficulty }) {
   const boardHeight = TETRIS_CONFIG.BOARD_HEIGHT[difficulty];
   const boardWidth = TETRIS_CONFIG.BOARD_WIDTH;
   const startLevel = TETRIS_CONFIG.START_LEVEL[difficulty];
@@ -536,6 +536,7 @@ export function Tetris({ difficulty, onExit }) {
           isNewHighScore={isNewHighScore}
           onRestart={initGame}
           onExit={onExit}
+          onChangeDifficulty={onChangeDifficulty}
         />
       </>
     );

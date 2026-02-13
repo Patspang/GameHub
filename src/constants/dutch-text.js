@@ -38,9 +38,9 @@ export const DUTCH_TEXT = {
         hard: 'Snel, hoog level',
       },
       'letter-leren': {
-        easy: 'Kies het juiste woord',
-        normal: 'Tik letters in volgorde',
-        hard: 'Typ het woord zelf',
+        easy: 'Woorden van 3 letters',
+        normal: 'Woorden van 4 letters',
+        hard: 'Tik letters in volgorde',
       },
       'muntenkluis': {
         easy: 'Sommen tot 5',
@@ -50,6 +50,11 @@ export const DUTCH_TEXT = {
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
+    language: 'Taal',
+    languages: {
+      nl: 'Nederlands',
+      en: 'English',
+    },
   },
   game: {
     score: 'Score',
@@ -70,6 +75,7 @@ export const DUTCH_TEXT = {
     wellDone: 'Goed zo!',
     almostThere: 'Bijna!',
     playAgain: 'Opnieuw Spelen',
+    changeDifficulty: 'Moeilijkheid Aanpassen',
   },
   instructions: {
     howToPlay: 'Hoe te spelen',

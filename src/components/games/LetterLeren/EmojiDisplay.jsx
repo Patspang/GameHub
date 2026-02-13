@@ -1,9 +1,9 @@
 // Large emoji display with letter progress slots
-// Shows the emoji prominently, and for Normal/Hard modes, letter slots below
+// Shows the emoji prominently, and for Hard mode, letter slots below
 
 export function EmojiDisplay({ emoji, word, selectedLetters, difficulty, showCompleted }) {
-  const isEasy = difficulty === 'makkelijk';
-  const showSlots = !isEasy || showCompleted;
+  const isHard = difficulty === 'moeilijk';
+  const showSlots = isHard || showCompleted;
 
   return (
     <div className="flex flex-col items-center">

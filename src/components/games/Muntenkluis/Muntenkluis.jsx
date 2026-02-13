@@ -34,7 +34,7 @@ function initRound(difficulty) {
   };
 }
 
-export function Muntenkluis({ difficulty, onExit }) {
+export function Muntenkluis({ difficulty, onExit, onChangeDifficulty }) {
   const [state, setState] = useState(() => initRound(difficulty));
   const [scores, setScores] = useLocalStorage('gamehub-scores', {});
   const { playSound } = useSoundEffects();
@@ -109,6 +109,7 @@ export function Muntenkluis({ difficulty, onExit }) {
           isNewHighScore={isNewHighScore}
           onRestart={handleRestart}
           onExit={onExit}
+          onChangeDifficulty={onChangeDifficulty}
         />
       </div>
     );
