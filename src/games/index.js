@@ -7,6 +7,7 @@ import { Tetris } from '../components/games/Tetris/Tetris';
 import { LetterLeren } from '../components/games/LetterLeren/LetterLeren';
 import { Muntenkluis } from '../components/games/Muntenkluis/Muntenkluis';
 import { Sudoku } from '../components/games/Sudoku/Sudoku';
+import { CijferVissen } from '../components/games/CijferVissen/CijferVissen';
 
 export const GAMES = {
   'letter-jager': {
@@ -62,5 +63,14 @@ export const GAMES = {
     description: 'Vul puzzels met cijfers',
     available: true,
     color: 'from-primary-green to-primary-blue',
+  },
+  'cijfer-vissen': {
+    id: 'cijfer-vissen',
+    component: CijferVissen,
+    name: 'Cijfer Vissen',
+    icon: '🎣',
+    description: 'Vang de vis met het juiste antwoord!',
+    available: true,
+    color: 'from-primary-blue to-primary-green',
   },
 };

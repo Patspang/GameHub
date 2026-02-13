@@ -55,6 +55,11 @@ export const DUTCH_TEXT = {
         normal: 'Middel puzzels (6x6)',
         hard: 'Grote puzzels (9x9)',
       },
+      'cijfer-vissen': {
+        easy: 'Optellen tot 10',
+        normal: 'Aftrekken binnen 10',
+        hard: 'Tafels 1 t/m 6',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -147,6 +152,27 @@ export const DUTCH_TEXT = {
     feedback: {
       puzzleComplete: 'Puzzel opgelost!',
       allComplete: 'Alle puzzels klaar! Geweldig!',
+    },
+  },
+  cijferVissen: {
+    name: 'Cijfer Vissen',
+    instructions: {
+      howToPlay: 'Vang de vis met het juiste antwoord!',
+    },
+    feedback: {
+      correct: ['Goed gevist!', 'Klopt helemaal!', 'Geweldig!', 'Perfect!', 'Goed zo!'],
+      tryAgain: ['Probeer opnieuw!', 'Kijk nog eens goed!', 'Bijna! Nog een keer?', 'Probeer een andere vis!'],
+    },
+    reward: {
+      title: 'Goed Gevist!',
+      perfect: 'Perfect! Alle vissen eerste keer gevangen!',
+      great: 'Goed gedaan!',
+      completed: 'Gelukt! Goed gevist!',
+      fishAgain: 'Opnieuw Vissen',
+    },
+    hud: {
+      catch: 'Vangst',
+      of: 'van',
     },
   },
   snake: {
