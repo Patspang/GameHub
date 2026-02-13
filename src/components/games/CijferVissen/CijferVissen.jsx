@@ -126,16 +126,12 @@ export function CijferVissen({ difficulty, onExit, onChangeDifficulty }) {
       }, CELEBRATION_DELAY);
 
     } else {
-      // Wrong fish — shake + flee, show feedback
+      // Wrong fish — sound + red flash + shake animation only
       playSound('wrong');
 
       if (pondActionsRef.current) {
         pondActionsRef.current.animateWrong(fishIndex);
       }
-
-      // Pick a random "try again" message
-      const messages = DUTCH_TEXT.cijferVissen.feedback.tryAgain;
-      const msg = messages[Math.floor(Math.random() * messages.length)];
 
       setState((prev) => {
         const newRoundMistakes = [...prev.roundMistakes];
@@ -145,7 +141,6 @@ export function CijferVissen({ difficulty, onExit, onChangeDifficulty }) {
           roundMistakes: newRoundMistakes,
           totalMistakes: prev.totalMistakes + 1,
           wrongFlash: prev.wrongFlash + 1,
-          feedbackMessage: msg,
           gamePhase: 'wrong-feedback',
         };
       });
@@ -155,7 +150,6 @@ export function CijferVissen({ difficulty, onExit, onChangeDifficulty }) {
         setState((prev) => ({
           ...prev,
           gamePhase: 'playing',
-          feedbackMessage: null,
         }));
       }, 1200);
     }
@@ -204,15 +198,6 @@ export function CijferVissen({ difficulty, onExit, onChangeDifficulty }) {
           gamePhase={state.gamePhase}
           actionsRef={pondActionsRef}
         />
-
-        {/* Feedback message overlay */}
-        {state.feedbackMessage && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-lg">
-            <p className="font-display font-bold text-lg text-text-primary text-center">
-              {state.feedbackMessage}
-            </p>
-          </div>
-        )}
 
         {/* Correct feedback overlay */}
         {state.gamePhase === 'catching' && state.feedbackMessage && (

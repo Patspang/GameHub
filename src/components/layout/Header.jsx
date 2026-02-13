@@ -20,7 +20,7 @@ export function Header({ onHomeClick, showHomeButton = false }) {
         {/* Sound toggle */}
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
-          className="text-2xl p-2 rounded-xl cursor-pointer"
+          className="text-2xl w-11 h-11 flex items-center justify-center rounded-xl cursor-pointer"
           aria-label={soundEnabled ? 'Geluid uit' : 'Geluid aan'}
         >
           {soundEnabled ? '🔊' : '🔇'}
@@ -30,7 +30,7 @@ export function Header({ onHomeClick, showHomeButton = false }) {
           <button
             onClick={onHomeClick}
             className="game-interactive font-display font-bold text-md
-              bg-primary-yellow text-text-primary
+              bg-primary-yellow text-text-primary min-h-[44px]
               px-5 py-2 rounded-xl shadow-sm cursor-pointer"
           >
             🏠 {DUTCH_TEXT.menu.backHome}

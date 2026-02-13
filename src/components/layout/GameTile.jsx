@@ -15,7 +15,7 @@ export function GameTile({ game, highScore, onClick }) {
         min-h-[250px] flex flex-col items-center justify-center
         transition-all duration-200 shadow-lg
         ${isAvailable
-          ? `bg-gradient-to-br ${game.color} cursor-pointer hover:scale-105 hover:shadow-xl`
+          ? `bg-gradient-to-br ${game.color} cursor-pointer active:scale-95`
           : 'bg-bg-secondary opacity-60 border-2 border-dashed border-primary-coral cursor-default'
         }
       `}
@@ -28,18 +28,21 @@ export function GameTile({ game, highScore, onClick }) {
       <div className="text-6xl mb-4">{game.icon}</div>
 
       {/* Game name */}
-      <h2 className={`font-display text-2xl font-bold ${isAvailable ? 'text-white' : 'text-text-primary'}`}>
+      <h2
+        className={`font-display text-2xl font-bold ${isAvailable ? 'text-white' : 'text-text-primary'}`}
+        style={isAvailable ? { textShadow: '0 1px 3px rgba(0,0,0,0.3)' } : undefined}
+      >
         {game.name}
       </h2>
 
       {/* Available: show click prompt and optional high score */}
       {isAvailable && (
-        <>
-          <ScoreDisplay score={highScore} className="mt-2 text-white/80" />
-          <p className="mt-2 text-sm text-white/80">
+        <div style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}>
+          <ScoreDisplay score={highScore} className="mt-2 text-white" />
+          <p className="mt-2 text-sm text-white">
             {DUTCH_TEXT.home.clickToPlay} →
           </p>
-        </>
+        </div>
       )}
 
       {/* Coming soon badge */}

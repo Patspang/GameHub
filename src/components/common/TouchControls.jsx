@@ -17,8 +17,8 @@ export function TouchControls({ onDirection }) {
         <button
           onPointerDown={handlePointer('up')}
           className="absolute top-0 left-1/2 -translate-x-1/2
-            w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
-            shadow-lg active:scale-90 active:bg-primary-blue/80
+            w-16 h-16 rounded-xl bg-primary-blue-dark text-white text-3xl font-bold
+            shadow-lg active:scale-90 active:bg-primary-blue-dark/80
             flex items-center justify-center cursor-pointer"
           style={{ touchAction: 'none' }}
           aria-label="Omhoog"
@@ -30,8 +30,8 @@ export function TouchControls({ onDirection }) {
         <button
           onPointerDown={handlePointer('down')}
           className="absolute bottom-0 left-1/2 -translate-x-1/2
-            w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
-            shadow-lg active:scale-90 active:bg-primary-blue/80
+            w-16 h-16 rounded-xl bg-primary-blue-dark text-white text-3xl font-bold
+            shadow-lg active:scale-90 active:bg-primary-blue-dark/80
             flex items-center justify-center cursor-pointer"
           style={{ touchAction: 'none' }}
           aria-label="Omlaag"
@@ -43,8 +43,8 @@ export function TouchControls({ onDirection }) {
         <button
           onPointerDown={handlePointer('left')}
           className="absolute left-0 top-1/2 -translate-y-1/2
-            w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
-            shadow-lg active:scale-90 active:bg-primary-blue/80
+            w-16 h-16 rounded-xl bg-primary-blue-dark text-white text-3xl font-bold
+            shadow-lg active:scale-90 active:bg-primary-blue-dark/80
             flex items-center justify-center cursor-pointer"
           style={{ touchAction: 'none' }}
           aria-label="Links"
@@ -56,8 +56,8 @@ export function TouchControls({ onDirection }) {
         <button
           onPointerDown={handlePointer('right')}
           className="absolute right-0 top-1/2 -translate-y-1/2
-            w-16 h-16 rounded-xl bg-primary-blue text-white text-3xl font-bold
-            shadow-lg active:scale-90 active:bg-primary-blue/80
+            w-16 h-16 rounded-xl bg-primary-blue-dark text-white text-3xl font-bold
+            shadow-lg active:scale-90 active:bg-primary-blue-dark/80
             flex items-center justify-center cursor-pointer"
           style={{ touchAction: 'none' }}
           aria-label="Rechts"

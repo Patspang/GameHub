@@ -2,11 +2,11 @@
 // Min 60px height, rounded corners, hover/active scale effects
 
 const VARIANTS = {
-  primary: 'bg-primary-blue text-white',
-  success: 'bg-primary-green text-white',
-  warning: 'bg-primary-coral text-white',
+  primary: 'bg-primary-blue-dark text-white',
+  success: 'bg-primary-green-dark text-white',
+  warning: 'bg-primary-coral-dark text-white',
   accent: 'bg-primary-yellow text-text-primary',
-  ghost: 'bg-white/80 text-text-primary border-2 border-primary-blue',
+  ghost: 'bg-white/80 text-text-primary border-2 border-primary-blue-dark',
 };
 
 export function Button({

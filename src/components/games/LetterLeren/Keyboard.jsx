@@ -32,8 +32,8 @@ export function Keyboard({ onKeyPress }) {
               key={letter}
               onPointerDown={() => onKeyPress(letter)}
               className="game-interactive font-display font-bold text-xl
-                min-w-[36px] h-14 px-2 rounded-lg shadow-sm cursor-pointer
-                bg-white text-text-primary border border-primary-blue/30
+                min-w-[44px] h-14 px-2 rounded-lg shadow-sm cursor-pointer
+                bg-white text-text-primary border border-primary-blue-dark/30
                 active:scale-90 active:bg-primary-blue active:text-white"
             >
               {letter}

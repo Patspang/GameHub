@@ -22,6 +22,8 @@ Kid-friendly web game platform (ages 5-7) built with React + Vite + Tailwind, de
 
 **IMPORTANT:** Read the master spec FIRST before starting any work. It contains detailed instructions for each phase.
 
+**IMPORTANT:** ALWAYS test locally first (`npm run dev` / `npm run build`) and only deploy (commit + push) to GitHub when explicitly instructed by the user.
+
 ## Tech Stack
 
 ```

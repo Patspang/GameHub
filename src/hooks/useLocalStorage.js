@@ -24,5 +24,15 @@ export function useLocalStorage(key, initialValue) {
     }
   };
 
-  return [storedValue, setValue];
+  // Re-read from localStorage (useful when another hook instance wrote to it)
+  const refresh = () => {
+    try {
+      const item = window.localStorage.getItem(key);
+      if (item) setStoredValue(JSON.parse(item));
+    } catch (error) {
+      console.error('Error refreshing from localStorage:', error);
+    }
+  };
+
+  return [storedValue, setValue, refresh];
 }

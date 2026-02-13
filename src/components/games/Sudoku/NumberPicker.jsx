@@ -25,7 +25,7 @@ export function NumberPicker({ maxNumber, onPick, onClear, hasSelection }) {
           onPointerDown={() => hasSelection && onPick(num)}
           className={`
             game-interactive font-display font-bold
-            bg-white text-text-primary border-2 border-primary-blue/40
+            bg-white text-text-primary border-2 border-primary-blue-dark/40
             rounded-xl shadow-sm
             flex items-center justify-center
             ${sizeClass}
@@ -42,7 +42,7 @@ export function NumberPicker({ maxNumber, onPick, onClear, hasSelection }) {
         onPointerDown={() => hasSelection && onClear()}
         className={`
           game-interactive font-display font-bold
-          bg-primary-coral/15 text-primary-coral border-2 border-primary-coral/40
+          bg-primary-coral/15 text-primary-coral-dark border-2 border-primary-coral-dark/40
           rounded-xl shadow-sm
           flex items-center justify-center
           ${sizeClass}

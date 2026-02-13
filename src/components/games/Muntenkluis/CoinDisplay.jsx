@@ -28,14 +28,14 @@ export function CoinDisplay({ a, b }) {
       <CoinGroup count={a} alignRight />
 
       {/* Plus sign */}
-      <span className="text-4xl font-bold text-primary-coral select-none mx-1">+</span>
+      <span className="text-4xl font-bold text-primary-coral-dark select-none mx-1">+</span>
 
       {/* Group B */}
       <CoinGroup count={b} />
 
       {/* Equals sign + question mark */}
-      <span className="text-4xl font-bold text-primary-blue select-none mx-1">=</span>
-      <span className="text-4xl font-bold text-primary-blue animate-bounce select-none">?</span>
+      <span className="text-4xl font-bold text-primary-blue-dark select-none mx-1">=</span>
+      <span className="text-4xl font-bold text-primary-blue-dark animate-bounce select-none">?</span>
     </div>
   );
 }

@@ -135,8 +135,8 @@ export function SudokuGrid({
                     : isHighlighted
                       ? 'bg-primary-blue/10'
                       : 'bg-white'}
-                  ${isPreFilled ? 'text-text-primary' : 'text-primary-blue'}
-                  ${isEmpty && !isSelected ? 'hover:bg-primary-blue/5' : ''}
+                  ${isPreFilled ? 'text-text-primary' : 'text-primary-blue-dark'}
+                  ${isEmpty && !isSelected ? 'active:bg-primary-blue/10' : ''}
                   ${isRecent && !isPreFilled ? 'animate-cell-pop' : ''}
                 `}
                 style={{ width: cellSize, height: cellSize }}

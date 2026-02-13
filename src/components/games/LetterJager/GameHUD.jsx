@@ -13,7 +13,7 @@ export function GameHUD({ score, lives, currentWord, collectedLetters }) {
           <span className="font-display font-bold text-lg text-text-primary">
             {DUTCH_TEXT.game.score}:
           </span>
-          <span className="font-display font-bold text-2xl text-primary-blue">
+          <span className="font-display font-bold text-2xl text-primary-blue-dark">
             {score}
           </span>
         </div>
@@ -41,7 +41,7 @@ export function GameHUD({ score, lives, currentWord, collectedLetters }) {
                 font-display font-bold text-xl w-9 h-9 flex items-center justify-center
                 rounded-lg transition-all duration-200
                 ${isCollected
-                  ? 'bg-success text-white scale-110'
+                  ? 'bg-success-dark text-white scale-110'
                   : 'bg-bg-secondary text-text-secondary'
                 }
               `}

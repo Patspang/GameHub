@@ -60,6 +60,11 @@ export const DUTCH_TEXT = {
         normal: 'Aftrekken binnen 10',
         hard: 'Tafels 1 t/m 6',
       },
+      'pinguin-avontuur': {
+        easy: 'Klein doolhof, 3 vissen',
+        normal: 'Middel doolhof, 4 vissen',
+        hard: 'Groot doolhof, 5 vissen',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -92,7 +97,7 @@ export const DUTCH_TEXT = {
   },
   instructions: {
     howToPlay: 'Hoe te spelen',
-    useArrows: 'Gebruik de knoppen om te bewegen',
+    useArrows: 'Gebruik de knoppen of veeg om te bewegen',
     collectLetters: 'Verzamel letters in de juiste volgorde',
     avoidCreatures: 'Blijf weg van de vriendjes',
   },
@@ -175,11 +180,66 @@ export const DUTCH_TEXT = {
       of: 'van',
     },
   },
+  tekenen: {
+    name: 'Tekenen & Kleuren',
+    menu: {
+      freeDraw: 'Vrij Tekenen',
+      freeDrawDescription: 'Teken wat je wilt!',
+      coloring: 'Kleurplaat',
+      coloringDescription: 'Kies een plaatje om in te kleuren',
+      gallery: 'Mijn Tekeningen',
+      galleryDescription: 'Bekijk je opgeslagen tekeningen',
+    },
+    tools: {
+      eraser: 'Gum',
+      undo: 'Terug',
+      clear: 'Wissen',
+      save: 'Opslaan',
+      back: 'Terug',
+    },
+    templates: {
+      cat: 'Kat',
+      butterfly: 'Vlinder',
+      star: 'Ster',
+      house: 'Huis',
+      flower: 'Bloem',
+      heart: 'Hart',
+      rainbow: 'Regenboog',
+      fish: 'Vis',
+      chooseTemplate: 'Kies een kleurplaat',
+    },
+    gallery: {
+      title: 'Mijn Tekeningen',
+      empty: 'Nog geen tekeningen!',
+      emptyHint: 'Maak je eerste tekening!',
+      delete: 'Verwijderen',
+      saved: 'Opgeslagen!',
+      galleryFull: 'Gallerij vol! Verwijder een tekening.',
+    },
+  },
+  pinguinAvontuur: {
+    name: 'Pinguïn Avontuur',
+    instructions: {
+      howToPlay: 'Help de pinguïn naar de zee!',
+      collectFish: 'Vang de vissen in de juiste volgorde: 1, 2, 3...',
+      useArrows: 'Gebruik de knoppen of veeg om te bewegen',
+    },
+    hud: {
+      fish: 'Vissen',
+      of: 'van',
+    },
+    feedback: {
+      fishCollected: 'Vis gevangen!',
+      wrongFish: 'Dat is niet de juiste vis!',
+      allFishCollected: 'Alle vissen gevangen! Zwem naar de zee!',
+      gameWon: 'De pinguïn is bij de zee! Hoera!',
+    },
+  },
   snake: {
     name: 'Tel Slang',
     instructions: {
       howToPlay: 'Eet de nummers in de juiste volgorde!',
-      useArrows: 'Gebruik de knoppen om de slang te besturen',
+      useArrows: 'Gebruik de knoppen of veeg om de slang te besturen',
     },
     hud: {
       target: 'Zoek',

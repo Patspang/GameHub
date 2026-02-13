@@ -38,8 +38,8 @@ export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores, langu
             onPointerDown={() => onLanguageChange('nl')}
             className={`font-display font-bold text-lg px-6 py-3 rounded-full transition-all
               ${language === 'nl'
-                ? 'bg-primary-blue text-white shadow-md scale-105'
-                : 'bg-white/60 text-text-secondary hover:bg-white/80'}`}
+                ? 'bg-primary-blue-dark text-white shadow-md scale-105'
+                : 'bg-white/60 text-text-secondary active:bg-white/80'}`}
           >
             🇳🇱 {DUTCH_TEXT.menu.languages.nl}
           </button>
@@ -47,8 +47,8 @@ export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores, langu
             onPointerDown={() => onLanguageChange('en')}
             className={`font-display font-bold text-lg px-6 py-3 rounded-full transition-all
               ${language === 'en'
-                ? 'bg-primary-blue text-white shadow-md scale-105'
-                : 'bg-white/60 text-text-secondary hover:bg-white/80'}`}
+                ? 'bg-primary-blue-dark text-white shadow-md scale-105'
+                : 'bg-white/60 text-text-secondary active:bg-white/80'}`}
           >
             🇬🇧 {DUTCH_TEXT.menu.languages.en}
           </button>

@@ -8,6 +8,8 @@ import { LetterLeren } from '../components/games/LetterLeren/LetterLeren';
 import { Muntenkluis } from '../components/games/Muntenkluis/Muntenkluis';
 import { Sudoku } from '../components/games/Sudoku/Sudoku';
 import { CijferVissen } from '../components/games/CijferVissen/CijferVissen';
+import { Tekenen } from '../components/games/Tekenen/Tekenen';
+import { PinguinAvontuur } from '../components/games/PinguinAvontuur/PinguinAvontuur';
 
 export const GAMES = {
   'letter-jager': {
@@ -70,6 +72,25 @@ export const GAMES = {
     name: 'Cijfer Vissen',
     icon: '🎣',
     description: 'Vang de vis met het juiste antwoord!',
+    available: true,
+    color: 'from-primary-blue to-primary-green',
+  },
+  'tekenen': {
+    id: 'tekenen',
+    component: Tekenen,
+    name: 'Tekenen & Kleuren',
+    icon: '🎨',
+    description: 'Teken en kleur je eigen plaatjes!',
+    available: true,
+    color: 'from-primary-coral to-primary-yellow',
+    skipDifficulty: true,
+  },
+  'pinguin-avontuur': {
+    id: 'pinguin-avontuur',
+    component: PinguinAvontuur,
+    name: 'Pinguïn Avontuur',
+    icon: '🐧',
+    description: 'Help de pinguïn naar de zee!',
     available: true,
     color: 'from-primary-blue to-primary-green',
   },

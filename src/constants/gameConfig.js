@@ -68,8 +68,8 @@ export const SNAKE_CONFIG = {
   },
   WALL_WRAPS: {
     [DIFFICULTY.EASY]: true,
-    [DIFFICULTY.NORMAL]: false,
-    [DIFFICULTY.HARD]: false,
+    [DIFFICULTY.NORMAL]: true,
+    [DIFFICULTY.HARD]: true,
   },
   SELF_COLLISION_KILLS: {
     [DIFFICULTY.EASY]: false,
@@ -199,6 +199,43 @@ export const CIJFER_VISSEN_CONFIG = {
     PERFECT_ROUND_BONUS: 50,
     SESSION_COMPLETE_BONUS: 200,
     THREE_STAR_BONUS: 300,
+  },
+};
+
+// Tekenen & Kleuren (drawing/coloring) configuration
+export const TEKENEN_CONFIG = {
+  MAX_GALLERY_SIZE: 20,
+  CANVAS_BG_COLOR: '#FFFFFF',
+  DEFAULT_BRUSH_SIZE: 8,
+  BRUSH_SIZES: [4, 8, 16],
+  DRAWING_COLORS: [
+    '#FF6B6B', '#FFA94D', '#FFD43B', '#69DB7C', '#40C057',
+    '#74C0FC', '#4DABF7', '#B197FC', '#F783AC', '#A0522D',
+    '#2D3748', '#FFFFFF',
+  ],
+  OUTLINE_COLOR: '#2D3748',
+  OUTLINE_WIDTH_RATIO: 0.008,
+};
+
+// Pinguïn Avontuur (penguin ice maze) configuration
+export const PINGUIN_CONFIG = {
+  GRID_SIZE: {
+    [DIFFICULTY.EASY]: { rows: 5, cols: 7 },
+    [DIFFICULTY.NORMAL]: { rows: 7, cols: 9 },
+    [DIFFICULTY.HARD]: { rows: 9, cols: 11 },
+  },
+  FISH_COUNT: {
+    [DIFFICULTY.EASY]: 3,
+    [DIFFICULTY.NORMAL]: 4,
+    [DIFFICULTY.HARD]: 5,
+  },
+  PLAYER_SPEED: 150,
+  FISH_SCORE: 100,
+  COMPLETION_BONUS: 500,
+  EXTRA_WALLS_TO_REMOVE: {
+    [DIFFICULTY.EASY]: 12,
+    [DIFFICULTY.NORMAL]: 6,
+    [DIFFICULTY.HARD]: 0,
   },
 };
 

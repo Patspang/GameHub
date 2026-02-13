@@ -11,7 +11,7 @@ export function SudokuHUD({ score, currentPuzzle, totalPuzzles }) {
           <span className="font-display font-bold text-lg text-text-primary">
             {DUTCH_TEXT.game.score}:
           </span>
-          <span className="font-display font-bold text-2xl text-primary-blue">
+          <span className="font-display font-bold text-2xl text-primary-blue-dark">
             {score}
           </span>
         </div>

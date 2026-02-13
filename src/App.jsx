@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { SCREENS } from './constants/gameConfig';
+import { SCREENS, DIFFICULTY } from './constants/gameConfig';
+import { GAMES } from './games';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Header } from './components/layout/Header';
 import { HomePage } from './components/layout/HomePage';
@@ -13,11 +14,16 @@ export function App() {
   const [language, setLanguage] = useState('nl');
   const [playerName, setPlayerName] = useLocalStorage('gamehub-player-name', '');
   // eslint-disable-next-line no-unused-vars
-  const [highScores, setHighScores] = useLocalStorage('gamehub-scores', {});
+  const [highScores, setHighScores, refreshHighScores] = useLocalStorage('gamehub-scores', {});
 
   const handleGameSelect = (gameId) => {
     setSelectedGame(gameId);
-    setCurrentScreen(SCREENS.GAME_MENU);
+    if (GAMES[gameId]?.skipDifficulty) {
+      setDifficulty(DIFFICULTY.EASY);
+      setCurrentScreen(SCREENS.PLAYING);
+    } else {
+      setCurrentScreen(SCREENS.GAME_MENU);
+    }
   };
 
   const handleDifficultySelect = (diff) => {
@@ -26,12 +32,14 @@ export function App() {
   };
 
   const handleBackToHome = () => {
+    refreshHighScores();
     setCurrentScreen(SCREENS.HOME);
     setSelectedGame(null);
     setDifficulty(null);
   };
 
   const handleBackToGameMenu = () => {
+    refreshHighScores();
     setCurrentScreen(SCREENS.GAME_MENU);
     setDifficulty(null);
   };

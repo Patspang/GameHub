@@ -27,7 +27,7 @@ export function MuntenkluisGameOver({ score, isNewHighScore, onRestart, onExit, 
       {/* Score display */}
       <div className="bg-white/80 rounded-2xl px-8 py-4 mb-4 text-center">
         <p className="font-display text-lg text-text-secondary">{DUTCH_TEXT.game.score}</p>
-        <p className="font-display text-4xl font-bold text-primary-blue">{score}</p>
+        <p className="font-display text-4xl font-bold text-primary-blue-dark">{score}</p>
       </div>
 
       {isNewHighScore && (

@@ -14,7 +14,7 @@ export function EmojiDisplay({ emoji, word, showCompleted }) {
           {word.split('').map((letter, i) => (
             <span
               key={i}
-              className="font-display font-bold text-3xl w-14 h-14 flex items-center justify-center rounded-xl bg-success text-white scale-110 transition-all duration-200"
+              className="font-display font-bold text-3xl w-14 h-14 flex items-center justify-center rounded-xl bg-success-dark text-white scale-110 transition-all duration-200"
             >
               {letter}
             </span>

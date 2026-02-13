@@ -30,7 +30,7 @@ export function GameOverScreen({ status, score, word, isNewHighScore, onRestart,
           {word.split('').map((letter, i) => (
             <span
               key={i}
-              className="font-display font-bold text-3xl w-12 h-12 flex items-center justify-center rounded-lg bg-success text-white"
+              className="font-display font-bold text-3xl w-12 h-12 flex items-center justify-center rounded-lg bg-success-dark text-white"
             >
               {letter}
             </span>
@@ -43,7 +43,7 @@ export function GameOverScreen({ status, score, word, isNewHighScore, onRestart,
         <p className="font-display text-lg text-text-secondary">
           {DUTCH_TEXT.game.score}
         </p>
-        <p className="font-display text-4xl font-bold text-primary-blue">
+        <p className="font-display text-4xl font-bold text-primary-blue-dark">
           {score}
         </p>
       </div>

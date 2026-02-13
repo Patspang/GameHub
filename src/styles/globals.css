@@ -27,7 +27,14 @@
 
   /* Feedback */
   --color-success: #48BB78;
+  --color-success-dark: #2F855A;
   --color-error: #FC8181;
+  --color-error-dark: #C53030;
+
+  /* Accessible dark variants — WCAG AA contrast with white */
+  --color-primary-blue-dark: #3B6FA0;
+  --color-primary-green-dark: #48874A;
+  --color-primary-coral-dark: #C06040;
 
   /* Fonts */
   --font-display: "Fredoka", "Comic Sans MS", cursive;
@@ -38,7 +45,7 @@
   --text-xl: 2rem;
   --text-lg: 1.5rem;
   --text-md: 1.25rem;
-  --text-sm: 1rem;
+  --text-sm: 1.125rem;
 }
 
 /* === Base Styles === */
@@ -202,4 +209,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-star-pop {
   animation: star-pop 0.4s ease-out forwards;
+}
+
+/* Sea wave bobbing for ice maze exit tile */
+@keyframes sea-wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-sea-wave {
+  animation: sea-wave 1.5s ease-in-out infinite;
 }
