@@ -5,13 +5,16 @@
 import { useMemo } from 'react';
 import { TetrisBlock } from './TetrisBlock';
 
-const RESERVED_HEIGHT = 340;
+// Reserved space for HUD (~64px) + TouchControls (~216px) + Stoppen button (~56px) + padding (~24px)
+const RESERVED_HEIGHT = 360;
 const RESERVED_WIDTH = 32;
+// Extra width for the next-piece preview sidebar (~120px)
+const SIDEBAR_WIDTH = 120;
 const MIN_TILE = 20;
 const MAX_TILE = 36;
 
 function computeTileSize(rows, cols) {
-  const availW = window.innerWidth - RESERVED_WIDTH;
+  const availW = window.innerWidth - RESERVED_WIDTH - SIDEBAR_WIDTH;
   const availH = window.innerHeight - RESERVED_HEIGHT;
   const tile = Math.min(Math.floor(availW / cols), Math.floor(availH / rows));
   return Math.max(MIN_TILE, Math.min(MAX_TILE, tile));

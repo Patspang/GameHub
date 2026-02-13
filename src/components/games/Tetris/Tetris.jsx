@@ -542,9 +542,12 @@ export function Tetris({ difficulty, onExit, onChangeDifficulty }) {
     );
   }
 
-  // Playing
+  // Playing — use dvh to fit everything in viewport without scrolling
   return (
-    <div className="flex flex-col items-center px-2 py-2 no-select" style={{ touchAction: 'none' }}>
+    <div
+      className="flex flex-col items-center px-2 py-2 no-select"
+      style={{ touchAction: 'none', height: '100dvh', maxHeight: '100dvh' }}
+    >
       <FlashOverlay trigger={lineClearCount} />
 
       <TetrisHUD
@@ -567,9 +570,11 @@ export function Tetris({ difficulty, onExit, onChangeDifficulty }) {
         />
       </div>
 
+      <div className="flex-1" />
+
       <TouchControls onDirection={handleDirection} />
 
-      <div className="mt-2">
+      <div className="mt-2 pb-2">
         <Button variant="accent" size="md" onClick={onExit}>
           {DUTCH_TEXT.game.quit}
         </Button>
