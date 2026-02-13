@@ -1,24 +1,12 @@
 // Web Audio API sound effects - no audio files needed
 // Generates short synthesized sounds for game events
+// Reads soundEnabled from SoundContext so all components share the same state
 
-import { useCallback, useRef } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useCallback } from 'react';
+import { useSoundContext } from '../contexts/SoundContext';
 
 export function useSoundEffects() {
-  const [soundEnabled, setSoundEnabled] = useLocalStorage('sound-enabled', true);
-  const audioCtxRef = useRef(null);
-
-  // Lazy-init AudioContext (must happen after user gesture on mobile)
-  const getCtx = useCallback(() => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    // Resume if suspended (iOS Safari requirement)
-    if (audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume();
-    }
-    return audioCtxRef.current;
-  }, []);
+  const { soundEnabled, setSoundEnabled, getCtx } = useSoundContext();
 
   const playSound = useCallback((type) => {
     if (!soundEnabled) return;
