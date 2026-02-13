@@ -3,7 +3,7 @@
 // Fish click detection, catch animation, wrong-fish shake + flee
 // React controls what's shown via props; PixiJS handles rendering + physics
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { Application } from 'pixi.js';
 import { CIJFER_VISSEN_CONFIG } from '../../../constants/gameConfig';
 import {
@@ -48,6 +48,7 @@ export function PondCanvas({ problem, onFishClick, gamePhase, actionsRef }) {
   const lineRef = useRef(null);
   const onFishClickRef = useRef(onFishClick);
   const gamePhaseRef = useRef(gamePhase);
+  const [appReady, setAppReady] = useState(false);
 
   // Keep callback ref current
   useEffect(() => { onFishClickRef.current = onFishClick; }, [onFishClick]);
@@ -89,6 +90,9 @@ export function PondCanvas({ problem, onFishClick, gamePhase, actionsRef }) {
       const boat = drawBoat(bounds.centerX, bounds.centerY);
       boatRef.current = boat;
       app.stage.addChild(boat);
+
+      // Signal that PixiJS is ready so fish can be spawned
+      setAppReady(true);
 
       // Fish swimming ticker
       app.ticker.add((ticker) => {
@@ -179,8 +183,9 @@ export function PondCanvas({ problem, onFishClick, gamePhase, actionsRef }) {
     };
   }, []);
 
-  // Spawn / update fish when problem changes
+  // Spawn / update fish when problem changes or app becomes ready
   useEffect(() => {
+    if (!appReady) return;
     const app = appRef.current;
     const bounds = pondBoundsRef.current;
     if (!app || !bounds || !problem) return;
@@ -232,7 +237,7 @@ export function PondCanvas({ problem, onFishClick, gamePhase, actionsRef }) {
     });
 
     fishStatesRef.current = newFishStates;
-  }, [problem]);
+  }, [appReady, problem]);
 
   // Handle catch animation (correct fish)
   const animateCatch = useCallback((fishIndex) => {
