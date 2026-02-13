@@ -6,6 +6,7 @@ import { Snake } from '../components/games/Snake/Snake';
 import { Tetris } from '../components/games/Tetris/Tetris';
 import { LetterLeren } from '../components/games/LetterLeren/LetterLeren';
 import { Muntenkluis } from '../components/games/Muntenkluis/Muntenkluis';
+import { Sudoku } from '../components/games/Sudoku/Sudoku';
 
 export const GAMES = {
   'letter-jager': {
@@ -52,5 +53,14 @@ export const GAMES = {
     description: 'Tel munten en oefen met optellen',
     available: true,
     color: 'from-primary-yellow to-primary-coral',
+  },
+  'sudoku': {
+    id: 'sudoku',
+    component: Sudoku,
+    name: 'Sudoku',
+    icon: '🧩',
+    description: 'Vul puzzels met cijfers',
+    available: true,
+    color: 'from-primary-green to-primary-blue',
   },
 };

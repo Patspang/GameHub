@@ -50,6 +50,11 @@ export const DUTCH_TEXT = {
         normal: 'Sommen tot 10',
         hard: 'Sommen tot 20',
       },
+      'sudoku': {
+        easy: 'Kleine puzzels (4x4)',
+        normal: 'Middel puzzels (6x6)',
+        hard: 'Grote puzzels (9x9)',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -131,6 +136,17 @@ export const DUTCH_TEXT = {
       wrong: ['Bijna!', 'Probeer nog eens!', 'Je kan het!', 'Nog een keer!'],
       allComplete: 'De kluis zit vol! Geweldig!',
       vaultFull: 'De kluis zit helemaal vol!',
+    },
+  },
+  sudoku: {
+    name: 'Sudoku',
+    instructions: {
+      howToPlay: 'Vul de lege vakjes met de juiste cijfers!',
+      tapCell: 'Tik op een leeg vakje en kies een cijfer',
+    },
+    feedback: {
+      puzzleComplete: 'Puzzel opgelost!',
+      allComplete: 'Alle puzzels klaar! Geweldig!',
     },
   },
   snake: {

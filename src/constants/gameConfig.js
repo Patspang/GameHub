@@ -148,6 +148,38 @@ export const MUNTENKLUIS_CONFIG = {
   },
 };
 
+// Sudoku configuration
+export const SUDOKU_CONFIG = {
+  PUZZLES_PER_SESSION: {
+    [DIFFICULTY.EASY]: 3,
+    [DIFFICULTY.NORMAL]: 2,
+    [DIFFICULTY.HARD]: 1,
+  },
+  GRID_PARAMS: {
+    [DIFFICULTY.EASY]: { gridSize: 4, boxRows: 2, boxCols: 2 },
+    [DIFFICULTY.NORMAL]: { gridSize: 6, boxRows: 2, boxCols: 3 },
+    [DIFFICULTY.HARD]: { gridSize: 9, boxRows: 3, boxCols: 3 },
+  },
+  CELLS_TO_REMOVE: {
+    [DIFFICULTY.EASY]: 7,
+    [DIFFICULTY.NORMAL]: 16,
+    [DIFFICULTY.HARD]: 48,
+  },
+  CELEBRATION_DELAY: 1500,
+  SCORING: {
+    CELL_CORRECT: {
+      [DIFFICULTY.EASY]: 50,
+      [DIFFICULTY.NORMAL]: 30,
+      [DIFFICULTY.HARD]: 20,
+    },
+    PUZZLE_COMPLETE_BONUS: {
+      [DIFFICULTY.EASY]: 200,
+      [DIFFICULTY.NORMAL]: 300,
+      [DIFFICULTY.HARD]: 500,
+    },
+  },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

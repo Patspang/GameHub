@@ -1721,6 +1721,23 @@ Once Letter Jager is complete and validated, the architecture supports easy addi
 
 **No architecture changes needed** - the multi-game foundation is already built!
 
+### Rendering Technology Decision:
+For future games requiring advanced 2D rendering (runners, platformers, sprite-based games), use **PixiJS** (~150KB) instead of a full game engine.
+
+**PixiJS was chosen over Godot Engine because:**
+- Lightweight: ~150KB vs 15-25MB WASM payload per Godot game
+- React integration: shares state, hooks, localStorage with the existing hub
+- Same tech stack: JavaScript, installable via npm, no separate toolchain
+- Mobile-friendly: no WASM performance concerns on tablets
+
+**Godot Engine was evaluated and rejected:**
+- Each exported game adds 15-25MB of WASM/JS payload
+- Runs in a separate canvas — no React integration, no shared state
+- Requires learning GDScript and maintaining a separate codebase
+- WASM performance issues on mobile/tablet devices
+
+**When to reach for PixiJS:** When CSS animations and React state are no longer sufficient — e.g., games needing sprite sheets, particle effects, physics, or 60fps canvas rendering.
+
 ---
 
 ## 📝 NOTES FOR CLAUDE CODE
