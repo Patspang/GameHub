@@ -2,13 +2,43 @@
 // Nested structure: outer grid of boxes, each box contains its cells
 // Thick dark borders between boxes, thin borders between cells within a box
 // Pre-filled numbers are bold/dark, user-entered numbers are blue with pop animation
+// Cell size is viewport-aware: computed from screen width, clamped to min/max
 
 import { useMemo } from 'react';
 
-// Cell size per grid size (px) — touch-friendly minimums
-const CELL_SIZES = { 4: 72, 6: 56, 9: 40 };
-// Font size per grid size
-const FONT_SIZES = { 4: 'text-3xl', 6: 'text-2xl', 9: 'text-xl' };
+// Max cell size per grid size — used on wide screens
+const MAX_CELL = { 4: 72, 6: 56, 9: 40 };
+// Min cell size — touch target floor
+const MIN_CELL = { 4: 48, 6: 36, 9: 28 };
+// Side padding reserved (2 × 16px page padding)
+const RESERVED_WIDTH = 32;
+// Outer gap (3px per gap between boxes) + outer padding (2 × 3px)
+function computeGridOverhead(boxCountCols, gridSize) {
+  // Outer padding: 3px left + 3px right = 6px
+  // Gaps between boxes: (boxCountCols - 1) * 3px
+  // Inner cell gaps per box: (gridSize/boxCountCols - 1) * 1px per box, times boxCountCols boxes
+  const outerPad = 6;
+  const outerGaps = (boxCountCols - 1) * 3;
+  const cellsPerBox = gridSize / boxCountCols;
+  const innerGaps = boxCountCols * (cellsPerBox - 1) * 1;
+  return outerPad + outerGaps + innerGaps;
+}
+
+function computeCellSize(gridSize, boxCols) {
+  const boxCountCols = gridSize / boxCols;
+  const overhead = computeGridOverhead(boxCountCols, gridSize);
+  const availWidth = window.innerWidth - RESERVED_WIDTH - overhead;
+  const computed = Math.floor(availWidth / gridSize);
+  return Math.max(MIN_CELL[gridSize], Math.min(MAX_CELL[gridSize], computed));
+}
+
+// Font size adapts to cell size
+function getFontClass(cellSize) {
+  if (cellSize >= 56) return 'text-3xl';
+  if (cellSize >= 40) return 'text-2xl';
+  if (cellSize >= 32) return 'text-xl';
+  return 'text-lg';
+}
 
 export function SudokuGrid({
   grid,
@@ -20,8 +50,8 @@ export function SudokuGrid({
   onCellSelect,
   recentCell,
 }) {
-  const cellSize = CELL_SIZES[gridSize] || 40;
-  const fontSize = FONT_SIZES[gridSize] || 'text-xl';
+  const cellSize = computeCellSize(gridSize, boxCols);
+  const fontSize = getFontClass(cellSize);
 
   // How many boxes in each direction
   const boxCountRows = gridSize / boxRows;
