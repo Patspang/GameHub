@@ -11,6 +11,7 @@ export function App() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
   const [language, setLanguage] = useState('nl');
+  const [playerName, setPlayerName] = useLocalStorage('gamehub-player-name', '');
   // eslint-disable-next-line no-unused-vars
   const [highScores, setHighScores] = useLocalStorage('gamehub-scores', {});
 
@@ -58,6 +59,8 @@ export function App() {
           highScores={Object.fromEntries(
             Object.keys(highScores).map((id) => [id, getBestScore(id)])
           )}
+          playerName={playerName}
+          onNameSet={setPlayerName}
         />
       )}
 

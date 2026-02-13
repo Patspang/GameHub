@@ -4,6 +4,9 @@
 export const DUTCH_TEXT = {
   home: {
     title: 'Kies je spel',
+    greeting: 'Hoi',
+    namePrompt: 'Hoe heet je?',
+    nameButton: 'Laten we spelen!',
     comingSoon: 'Binnenkort',
     clickToPlay: 'Tik om te spelen',
     games: {
