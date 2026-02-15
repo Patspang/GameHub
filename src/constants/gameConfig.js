@@ -251,6 +251,29 @@ export const BOS_RITJE_CONFIG = {
   CELEBRATION_DELAY: 1500,
 };
 
+// Memory card matching game configuration
+export const MEMORY_CONFIG = {
+  GRID: {
+    [DIFFICULTY.EASY]: { rows: 4, cols: 4 },     // 16 cards = 8 pairs
+    [DIFFICULTY.NORMAL]: { rows: 4, cols: 6 },    // 24 cards = 12 pairs
+    [DIFFICULTY.HARD]: { rows: 6, cols: 6 },      // 36 cards = 18 pairs
+  },
+  FLIP_DELAY: 1000,          // ms before non-matching cards flip back
+  CELEBRATION_DELAY: 1500,
+  SCORING: {
+    PER_PAIR: {
+      [DIFFICULTY.EASY]: 100,
+      [DIFFICULTY.NORMAL]: 80,
+      [DIFFICULTY.HARD]: 60,
+    },
+    PERFECT_BONUS: {
+      [DIFFICULTY.EASY]: 400,
+      [DIFFICULTY.NORMAL]: 600,
+      [DIFFICULTY.HARD]: 1000,
+    },
+  },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

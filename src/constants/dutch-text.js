@@ -70,6 +70,11 @@ export const DUTCH_TEXT = {
         normal: '15 levels - steeds moeilijker!',
         hard: '15 levels - steeds moeilijker!',
       },
+      'memory': {
+        easy: '4x4 kaarten (8 paren)',
+        normal: '4x6 kaarten (12 paren)',
+        hard: '6x6 kaarten (18 paren)',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -302,6 +307,22 @@ export const DUTCH_TEXT = {
       retry: 'Opnieuw Proberen',
       backHome: 'Naar Home',
       changeDifficulty: 'Moeilijkheid Aanpassen',
+    },
+  },
+  memory: {
+    name: 'Memory',
+    instructions: {
+      howToPlay: 'Vind alle paren door kaarten om te draaien!',
+      tapCard: 'Tik op een kaart om hem om te draaien',
+      findPairs: 'Onthoud waar de plaatjes zijn!',
+    },
+    hud: {
+      moves: 'Zetten',
+      pairs: 'Paren',
+    },
+    feedback: {
+      allComplete: 'Alle paren gevonden! Geweldig!',
+      movesResult: 'Je hebt het gehaald in {moves} zetten!',
     },
   },
   snake: {

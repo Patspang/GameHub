@@ -11,6 +11,7 @@ import { CijferVissen } from '../components/games/CijferVissen/CijferVissen';
 import { Tekenen } from '../components/games/Tekenen/Tekenen';
 import { PinguinAvontuur } from '../components/games/PinguinAvontuur/PinguinAvontuur';
 import { BosRitje } from '../components/games/BosRitje/BosRitje';
+import { Memory } from '../components/games/Memory/Memory';
 
 export const GAMES = {
   'letter-jager': {
@@ -104,5 +105,14 @@ export const GAMES = {
     available: true,
     color: 'from-primary-green to-primary-yellow',
     skipDifficulty: true,
+  },
+  'memory': {
+    id: 'memory',
+    component: Memory,
+    name: 'Memory',
+    icon: '🧠',
+    description: 'Vind alle paren!',
+    available: true,
+    color: 'from-primary-coral to-primary-blue',
   },
 };
