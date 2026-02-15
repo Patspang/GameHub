@@ -4,6 +4,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { BOS_RITJE_CONFIG } from '../../../constants/gameConfig';
+import { DUTCH_TEXT } from '../../../constants/dutch-text';
 import { useSoundEffects } from '../../../hooks/useSoundEffects';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import { getLevel, getTotalLevels } from './levelData';
@@ -41,6 +42,7 @@ export function BosRitje({ onExit }) {
   const [executionIndex, setExecutionIndex] = useState(-1);
   const [resultData, setResultData] = useState(null);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState(null);
 
   const [progress, setProgress] = useLocalStorage('gamehub-bos-ritje-progress', {});
   const [scores, setScores] = useLocalStorage('gamehub-scores', {});
@@ -133,10 +135,21 @@ export function BosRitje({ onExit }) {
           }
         }, CELEBRATION_DELAY);
       } else {
-        // Missed the goal
+        // Missed the goal — stay on planning screen for editing
         playSound('wrong');
-        setResultData({ type: 'missed' });
-        setGamePhase('missed');
+        const msg = DUTCH_TEXT.bosRitje.feedback.missed.message;
+        setTimeout(() => {
+          setGamePhase('planning');
+          setExecutionIndex(-1);
+          setFeedbackMessage(msg);
+          // Reset car to start
+          if (canvasActionsRef.current && levelData) {
+            canvasActionsRef.current.resetCar(
+              levelData.startX, levelData.startY, levelData.startDirection
+            );
+          }
+          setTimeout(() => setFeedbackMessage(null), 3000);
+        }, 600);
       }
       return;
     }
@@ -165,15 +178,22 @@ export function BosRitje({ onExit }) {
           canvasActionsRef.current.showCollision();
         }
 
+        // Stay on planning screen — reset car, keep commands for editing
+        const collisionMessages = DUTCH_TEXT.bosRitje.feedback.collision;
+        const msg = collisionMessages[collisionType] || collisionMessages.outOfBounds;
         setTimeout(() => {
-          setResultData({
-            type: 'collision',
-            collisionType,
-            collisionStep: stepIndex,
-            collisionCommand: cmd,
-          });
-          setGamePhase('collision');
-        }, 500);
+          setGamePhase('planning');
+          setExecutionIndex(-1);
+          setFeedbackMessage(msg);
+          // Reset car to start
+          if (canvasActionsRef.current && levelData) {
+            canvasActionsRef.current.resetCar(
+              levelData.startX, levelData.startY, levelData.startDirection
+            );
+          }
+          // Clear message after a few seconds
+          setTimeout(() => setFeedbackMessage(null), 3000);
+        }, 600);
         return;
       }
 
@@ -221,6 +241,7 @@ export function BosRitje({ onExit }) {
     setGamePhase('executing');
     setExecutionIndex(0);
     setIsNewHighScore(false);
+    setFeedbackMessage(null);
 
     // Start executing from step 0
     executeStep(commands, 0);
@@ -263,8 +284,8 @@ export function BosRitje({ onExit }) {
     );
   }
 
-  // Show feedback screen
-  if (gamePhase === 'success' || gamePhase === 'collision' || gamePhase === 'missed') {
+  // Show feedback screen (only for success on last level)
+  if (gamePhase === 'success') {
     return (
       <BosRitjeFeedback
         type={resultData?.type || gamePhase}
@@ -285,29 +306,43 @@ export function BosRitje({ onExit }) {
 
   // Planning or executing view
   return (
-    <div className="flex flex-col items-center px-2 py-2 max-w-[700px] mx-auto">
+    <div className="flex flex-col items-center px-2 py-2 max-w-[700px] mx-auto landscape:max-w-none landscape:h-[100dvh] landscape:max-h-[100dvh] landscape:overflow-hidden">
       <BosRitjeHUD
         levelData={levelData}
         earnedStars={earnedStars}
         totalLevels={totalLevels}
       />
 
-      <ForestCanvas
-        levelData={levelData}
-        actionsRef={canvasActionsRef}
-      />
+      {/* Portrait: vertical stack. Landscape: canvas left, controls right */}
+      <div className="flex flex-col landscape:flex-row landscape:flex-1 landscape:gap-3 landscape:min-h-0 w-full landscape:items-start">
+        <div className="landscape:flex-1 landscape:min-w-0 landscape:self-stretch landscape:flex landscape:items-center landscape:justify-center">
+          <ForestCanvas
+            levelData={levelData}
+            actionsRef={canvasActionsRef}
+          />
+        </div>
 
-      <div className="mt-3 w-full">
-        <CommandPanel
-          commands={commands}
-          maxCommands={maxCmd}
-          onAddCommand={handleAddCommand}
-          onRemoveCommand={handleRemoveCommand}
-          onClear={handleClear}
-          onStart={handleStart}
-          executing={gamePhase === 'executing'}
-          executionIndex={executionIndex}
-        />
+        <div className="mt-3 w-full landscape:mt-0 landscape:w-[200px] landscape:shrink-0 landscape:self-stretch landscape:flex landscape:flex-col landscape:justify-center landscape:items-center">
+          {/* Inline collision/missed feedback message */}
+          {feedbackMessage && (
+            <div className="w-full max-w-[600px] landscape:max-w-none mx-auto mb-2 px-4 py-2 bg-error/20 border-2 border-error rounded-xl text-center animate-bounce">
+              <span className="font-display font-bold text-text-primary text-sm">
+                💥 {feedbackMessage}
+              </span>
+            </div>
+          )}
+
+          <CommandPanel
+            commands={commands}
+            maxCommands={maxCmd}
+            onAddCommand={handleAddCommand}
+            onRemoveCommand={handleRemoveCommand}
+            onClear={handleClear}
+            onStart={handleStart}
+            executing={gamePhase === 'executing'}
+            executionIndex={executionIndex}
+          />
+        </div>
       </div>
     </div>
   );

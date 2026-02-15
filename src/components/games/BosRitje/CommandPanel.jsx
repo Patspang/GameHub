@@ -1,6 +1,7 @@
 // Route planning UI for Bos Ritje
 // Fixed empty slots that fill with command arrows as the child taps them
 // All interaction via taps — no drag-and-drop
+// Landscape: compact vertical sidebar layout
 
 import { DUTCH_TEXT } from '../../../constants/dutch-text';
 import { Button } from '../../common/Button';
@@ -33,16 +34,16 @@ export function CommandPanel({
   }
 
   return (
-    <div className="w-full max-w-[600px] mx-auto px-2 flex flex-col items-center">
+    <div className="w-full max-w-[600px] landscape:max-w-none mx-auto px-2 flex flex-col items-center">
       {/* Route label */}
       <div className="mb-1">
-        <span className="font-display font-bold text-text-primary">
+        <span className="font-display font-bold text-text-primary landscape:text-sm">
           {t.yourRoute}
         </span>
       </div>
 
       {/* Fixed slot grid — dynamic width based on step count */}
-      <div className="inline-flex flex-wrap gap-1.5 min-h-[44px] p-2 bg-white/60 rounded-xl border-2 border-primary-blue-dark/20 mb-3">
+      <div className="inline-flex flex-wrap gap-1.5 min-h-[44px] landscape:min-h-0 p-2 landscape:p-1.5 bg-white/60 rounded-xl border-2 border-primary-blue-dark/20 mb-3 landscape:mb-2">
         {slots.map((cmd, i) => {
           const isFilled = cmd !== null;
           const isExecuted = executing && i < executionIndex;
@@ -54,7 +55,7 @@ export function CommandPanel({
               onClick={() => isFilled && !executing && onRemoveCommand(i)}
               disabled={!isFilled || executing}
               className={`
-                flex items-center justify-center w-10 h-10 rounded-lg text-lg
+                flex items-center justify-center w-10 h-10 landscape:w-8 landscape:h-8 rounded-lg text-lg landscape:text-base
                 transition-all
                 ${isActive
                   ? 'bg-primary-yellow ring-2 ring-primary-yellow scale-110'
@@ -80,13 +81,13 @@ export function CommandPanel({
       {/* Command buttons */}
       {!executing && (
         <>
-          <div className="flex justify-center gap-3 mb-3">
+          <div className="flex justify-center gap-3 landscape:gap-2 mb-3 landscape:mb-2">
             <button
               onClick={() => canAdd && onAddCommand('forward')}
               disabled={!canAdd}
               className={`
-                flex flex-col items-center justify-center
-                w-[72px] h-[72px] rounded-2xl font-display font-bold
+                flex items-center justify-center
+                w-[72px] h-[72px] landscape:w-[56px] landscape:h-[56px] rounded-2xl font-display font-bold
                 shadow-md transition-all
                 ${canAdd
                   ? 'bg-primary-blue-dark text-white active:scale-90 cursor-pointer'
@@ -94,15 +95,14 @@ export function CommandPanel({
                 }
               `}
             >
-              <span className="text-2xl">⬆️</span>
-              <span className="text-xs mt-0.5">{t.forward}</span>
+              <span className="text-2xl landscape:text-xl">⬆️</span>
             </button>
             <button
               onClick={() => canAdd && onAddCommand('left')}
               disabled={!canAdd}
               className={`
-                flex flex-col items-center justify-center
-                w-[72px] h-[72px] rounded-2xl font-display font-bold
+                flex items-center justify-center
+                w-[72px] h-[72px] landscape:w-[56px] landscape:h-[56px] rounded-2xl font-display font-bold
                 shadow-md transition-all
                 ${canAdd
                   ? 'bg-primary-coral-dark text-white active:scale-90 cursor-pointer'
@@ -110,15 +110,14 @@ export function CommandPanel({
                 }
               `}
             >
-              <span className="text-2xl">⬅️</span>
-              <span className="text-xs mt-0.5">{t.left}</span>
+              <span className="text-2xl landscape:text-xl">⬅️</span>
             </button>
             <button
               onClick={() => canAdd && onAddCommand('right')}
               disabled={!canAdd}
               className={`
-                flex flex-col items-center justify-center
-                w-[72px] h-[72px] rounded-2xl font-display font-bold
+                flex items-center justify-center
+                w-[72px] h-[72px] landscape:w-[56px] landscape:h-[56px] rounded-2xl font-display font-bold
                 shadow-md transition-all
                 ${canAdd
                   ? 'bg-primary-coral-dark text-white active:scale-90 cursor-pointer'
@@ -126,13 +125,12 @@ export function CommandPanel({
                 }
               `}
             >
-              <span className="text-2xl">➡️</span>
-              <span className="text-xs mt-0.5">{t.right}</span>
+              <span className="text-2xl landscape:text-xl">➡️</span>
             </button>
           </div>
 
           {/* Action buttons */}
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 landscape:flex-col landscape:gap-2 landscape:w-full">
             <Button
               variant="success"
               size="md"

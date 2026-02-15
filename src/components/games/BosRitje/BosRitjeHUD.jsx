@@ -7,7 +7,7 @@ export function BosRitjeHUD({ levelData, earnedStars, totalLevels }) {
   const t = DUTCH_TEXT.bosRitje.game;
 
   return (
-    <div className="flex items-center justify-between px-4 py-2 bg-white/60 rounded-xl mb-2 max-w-[600px] mx-auto">
+    <div className="flex items-center justify-between px-4 py-2 bg-white/60 rounded-xl mb-2 max-w-[600px] landscape:max-w-none w-full mx-auto">
       {/* Level info */}
       <div className="flex items-center gap-2">
         <span className="font-display font-bold text-primary-blue-dark">

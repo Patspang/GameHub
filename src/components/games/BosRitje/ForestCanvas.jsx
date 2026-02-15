@@ -40,8 +40,11 @@ export function ForestCanvas({ levelData, actionsRef }) {
     const el = containerRef.current;
     if (el) {
       const containerW = el.clientWidth;
-      // Calculate tile size from container width
-      const tileSize = Math.floor(containerW / cols);
+      const containerH = el.clientHeight || window.innerHeight;
+      // Calculate tile size from both dimensions, use the smaller
+      const tileSizeFromW = Math.floor(containerW / cols);
+      const tileSizeFromH = Math.floor(containerH / rows);
+      const tileSize = Math.min(tileSizeFromW, tileSizeFromH);
       tileSizeRef.current = tileSize;
       const canvasW = cols * tileSize;
       const canvasH = rows * tileSize;
@@ -378,10 +381,9 @@ export function ForestCanvas({ levelData, actionsRef }) {
   return (
     <div
       ref={containerRef}
-      className="w-full rounded-2xl overflow-hidden shadow-lg bg-[#E8F5E9] flex items-center justify-center"
+      className="w-full h-full rounded-2xl overflow-hidden shadow-lg bg-[#E8F5E9] flex items-center justify-center max-w-[600px] landscape:max-w-none"
       style={{
         touchAction: 'none',
-        maxWidth: 600,
       }}
     />
   );
