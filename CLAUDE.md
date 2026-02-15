@@ -144,6 +144,7 @@ import { GameName } from '../components/games/GameName/GameName';
   available: true,
   color: 'from-primary-blue to-primary-green',
   // skipDifficulty: true,  // Add this to skip difficulty menu
+  createdAt: 'YYYY-MM-DD',  // REQUIRED: today's date, used for "Nieuw" badge (5-day window)
 },
 ```
 

@@ -1,14 +1,23 @@
 // Game selection screen - the main landing page
 // Renders a grid of game tiles from the games registry
+// Shows top 3 most-played games in a featured row when available
 // Shows a name popup on first visit, personalized greeting after
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { GAMES } from '../../games';
 import { DUTCH_TEXT } from '../../constants/dutch-text';
 import { GameTile } from './GameTile';
 import { Button } from '../common/Button';
 
-export function HomePage({ onSelectGame, highScores, playerName, onNameSet }) {
+function isNewGame(game) {
+  if (!game.createdAt) return false;
+  const created = new Date(game.createdAt);
+  const now = new Date();
+  const diffDays = (now - created) / (1000 * 60 * 60 * 24);
+  return diffDays <= 5;
+}
+
+export function HomePage({ onSelectGame, highScores, playCounts, playerName, onNameSet }) {
   const [nameInput, setNameInput] = useState('');
   const showNamePopup = !playerName;
 
@@ -18,6 +27,24 @@ export function HomePage({ onSelectGame, highScores, playerName, onNameSet }) {
       onNameSet(trimmed);
     }
   };
+
+  // Compute top 3 most-played games (only when at least 3 games have been played)
+  const { topGames, remainingGames } = useMemo(() => {
+    const allGames = Object.values(GAMES);
+    const gamesWithCounts = allGames
+      .filter((g) => g.available && (playCounts?.[g.id] || 0) > 0)
+      .sort((a, b) => (playCounts[b.id] || 0) - (playCounts[a.id] || 0));
+
+    if (gamesWithCounts.length < 3) {
+      return { topGames: [], remainingGames: allGames };
+    }
+
+    const top3Ids = new Set(gamesWithCounts.slice(0, 3).map((g) => g.id));
+    return {
+      topGames: gamesWithCounts.slice(0, 3),
+      remainingGames: allGames.filter((g) => !top3Ids.has(g.id)),
+    };
+  }, [playCounts]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 py-8">
@@ -55,12 +82,39 @@ export function HomePage({ onSelectGame, highScores, playerName, onNameSet }) {
         GameHub - Leren op een spelende wijze
       </p>
 
+      {/* Top 3 favorites row */}
+      {topGames.length === 3 && (
+        <>
+          <h2 className="font-display text-2xl font-bold text-text-primary mb-4">
+            {DUTCH_TEXT.home.favorites}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mb-8">
+            {topGames.map((game) => (
+              <GameTile
+                key={game.id}
+                game={game}
+                highScore={highScores?.[game.id]}
+                isNew={isNewGame(game)}
+                onClick={() => onSelectGame(game.id)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* All other games */}
+      {topGames.length === 3 && (
+        <h2 className="font-display text-2xl font-bold text-text-primary mb-4">
+          {DUTCH_TEXT.home.otherGames}
+        </h2>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl w-full">
-        {Object.values(GAMES).map((game) => (
+        {remainingGames.map((game) => (
           <GameTile
             key={game.id}
             game={game}
             highScore={highScores?.[game.id]}
+            isNew={isNewGame(game)}
             onClick={() => onSelectGame(game.id)}
           />
         ))}

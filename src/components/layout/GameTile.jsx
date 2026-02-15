@@ -5,7 +5,7 @@
 import { DUTCH_TEXT } from '../../constants/dutch-text';
 import { ScoreDisplay } from '../common/ScoreDisplay';
 
-export function GameTile({ game, highScore, onClick }) {
+export function GameTile({ game, highScore, isNew, onClick }) {
   const isAvailable = game.available;
 
   return (
@@ -24,6 +24,15 @@ export function GameTile({ game, highScore, onClick }) {
       tabIndex={isAvailable ? 0 : undefined}
       onKeyDown={isAvailable ? (e) => { if (e.key === 'Enter') onClick(); } : undefined}
     >
+      {/* "Nieuw" badge for recently added games */}
+      {isNew && (
+        <div className="absolute top-3 right-3 bg-white px-3 py-1 rounded-full shadow-md animate-bounce">
+          <span className="font-display font-bold text-sm text-primary-coral-dark">
+            {DUTCH_TEXT.home.newBadge}
+          </span>
+        </div>
+      )}
+
       {/* Game icon */}
       <div className="text-6xl mb-4">{game.icon}</div>
 

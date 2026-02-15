@@ -16,6 +16,14 @@ export function App() {
   const [playerName, setPlayerName] = useLocalStorage('gamehub-player-name', '');
   // eslint-disable-next-line no-unused-vars
   const [highScores, setHighScores, refreshHighScores] = useLocalStorage('gamehub-scores', {});
+  const [playCounts, setPlayCounts] = useLocalStorage('gamehub-play-counts', {});
+
+  const incrementPlayCount = (gameId) => {
+    setPlayCounts((prev) => ({
+      ...prev,
+      [gameId]: (prev[gameId] || 0) + 1,
+    }));
+  };
 
   const handleGameSelect = (gameId) => {
     setSelectedGame(gameId);
@@ -23,6 +31,7 @@ export function App() {
     if (game?.skipDifficulty) {
       setDifficulty(DIFFICULTY.EASY);
       setCurrentScreen(SCREENS.PLAYING);
+      incrementPlayCount(gameId);
       trackGameStart(gameId, game.name, DIFFICULTY.EASY);
     } else {
       setCurrentScreen(SCREENS.GAME_MENU);
@@ -32,6 +41,7 @@ export function App() {
   const handleDifficultySelect = (diff) => {
     setDifficulty(diff);
     setCurrentScreen(SCREENS.PLAYING);
+    incrementPlayCount(selectedGame);
     const game = GAMES[selectedGame];
     trackDifficultySelect(selectedGame, game?.name, diff);
     trackGameStart(selectedGame, game?.name, diff);
@@ -73,6 +83,7 @@ export function App() {
           highScores={Object.fromEntries(
             Object.keys(highScores).map((id) => [id, getBestScore(id)])
           )}
+          playCounts={playCounts}
           playerName={playerName}
           onNameSet={setPlayerName}
         />

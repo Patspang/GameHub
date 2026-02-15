@@ -22,6 +22,7 @@ export const GAMES = {
     description: 'Verzamel letters om woorden te maken',
     available: true,
     color: 'from-primary-blue to-primary-green',
+    createdAt: '2026-02-01',
   },
   'snake': {
     id: 'snake',
@@ -31,6 +32,7 @@ export const GAMES = {
     description: 'Eet nummers in de juiste volgorde',
     available: true,
     color: 'from-primary-green to-primary-yellow',
+    createdAt: '2026-02-01',
   },
   'tetris': {
     id: 'tetris',
@@ -40,6 +42,7 @@ export const GAMES = {
     description: 'Stapel blokken',
     available: true,
     color: 'from-primary-coral to-primary-yellow',
+    createdAt: '2026-02-01',
   },
   'letter-leren': {
     id: 'letter-leren',
@@ -49,6 +52,7 @@ export const GAMES = {
     description: 'Leer letters en woorden met plaatjes',
     available: true,
     color: 'from-primary-blue to-primary-coral',
+    createdAt: '2026-02-01',
   },
   'muntenkluis': {
     id: 'muntenkluis',
@@ -58,6 +62,7 @@ export const GAMES = {
     description: 'Tel munten en oefen met optellen',
     available: true,
     color: 'from-primary-yellow to-primary-coral',
+    createdAt: '2026-02-01',
   },
   'sudoku': {
     id: 'sudoku',
@@ -67,6 +72,7 @@ export const GAMES = {
     description: 'Vul puzzels met cijfers',
     available: true,
     color: 'from-primary-green to-primary-blue',
+    createdAt: '2026-02-01',
   },
   'cijfer-vissen': {
     id: 'cijfer-vissen',
@@ -76,6 +82,7 @@ export const GAMES = {
     description: 'Vang de vis met het juiste antwoord!',
     available: true,
     color: 'from-primary-blue to-primary-green',
+    createdAt: '2026-02-01',
   },
   'tekenen': {
     id: 'tekenen',
@@ -86,6 +93,7 @@ export const GAMES = {
     available: true,
     color: 'from-primary-coral to-primary-yellow',
     skipDifficulty: true,
+    createdAt: '2026-02-01',
   },
   'pinguin-avontuur': {
     id: 'pinguin-avontuur',
@@ -95,6 +103,7 @@ export const GAMES = {
     description: 'Help de pinguïn naar de zee!',
     available: true,
     color: 'from-primary-blue to-primary-green',
+    createdAt: '2026-02-01',
   },
   'bos-ritje': {
     id: 'bos-ritje',
@@ -105,6 +114,7 @@ export const GAMES = {
     available: true,
     color: 'from-primary-green to-primary-yellow',
     skipDifficulty: true,
+    createdAt: '2026-02-01',
   },
   'memory': {
     id: 'memory',
@@ -114,5 +124,6 @@ export const GAMES = {
     description: 'Vind alle paren!',
     available: true,
     color: 'from-primary-coral to-primary-blue',
+    createdAt: '2026-02-13',
   },
 };

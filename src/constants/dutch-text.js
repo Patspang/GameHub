@@ -9,6 +9,9 @@ export const DUTCH_TEXT = {
     nameButton: 'Laten we spelen!',
     comingSoon: 'Binnenkort',
     clickToPlay: 'Tik om te spelen',
+    favorites: 'Jouw Favorieten',
+    otherGames: 'Andere Spellen',
+    newBadge: 'Nieuw!',
     games: {
       letterJager: 'Letter Jager',
       snake: 'Snake',
