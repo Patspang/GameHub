@@ -1,35 +1,21 @@
-# Letter Jager - Multi-Game Platform for Kids
+# GameHub - Multi-Game Platform for Kids
 
-Kid-friendly web game platform (ages 5-7) built with React + Vite + Tailwind, deployed to GitHub Pages.
+Kid-friendly web game platform (ages 5-7) built with React 19 + Vite 7 + Tailwind CSS v4, deployed to GitHub Pages.
 
-## Project Context
-
-**Goal:** Educational Dutch-language games starting with "Letter Jager" (Pac-Man variant where kids collect letters to spell words). Architecture supports easy addition of Snake, Tetris, etc.
-
-**Target Users:** 5 & 7 year old children, non-English readers  
-**Language:** 100% Dutch UI (code/comments in English)  
+**Target Users:** 5 & 7 year old children, non-English readers
+**Language:** 100% Dutch UI (code/comments in English)
 **Hosting:** GitHub Pages (static, free)
-
-## Reference Documents
-
-📋 **Master Spec:** `LETTER_JAGER_MASTER_SPEC.md` - Complete project specification with:
-- Multi-agent orchestration plan
-- Detailed product requirements & user stories
-- Design system & UI components
-- Technical architecture
-- Implementation guidelines
-- QA test plan
-
-**IMPORTANT:** Read the master spec FIRST before starting any work. It contains detailed instructions for each phase.
+**Live:** https://patspang.github.io/GameHub/
 
 **IMPORTANT:** ALWAYS test locally first (`npm run dev` / `npm run build`) and only deploy (commit + push) to GitHub when explicitly instructed by the user.
 
 ## Tech Stack
 
 ```
-Framework: React 18+ with Vite
-Styling: Tailwind CSS (design system defined in master spec)
-State: React Context API + localStorage
+Framework: React 19 with Vite 7
+Styling: Tailwind CSS v4 (design system in src/styles/globals.css @theme)
+Canvas: PixiJS 8 (for games needing animation: CijferVissen, BosRitje)
+State: React hooks + localStorage (no Context API needed)
 Deployment: GitHub Actions → GitHub Pages
 ```
 
@@ -40,56 +26,193 @@ Home Page → Game Selection → Difficulty → Play → Home
           (Grid of tiles)  (3 levels)   (Game) (Back button)
 ```
 
-## Development Workflow
+Games with `skipDifficulty: true` go directly from selection to play.
 
-### Phase-Based Development
+## Adding a New Game — Complete Recipe
 
-Work in **sequential phases with validation checkpoints**:
+When the user asks to create a new game, follow this recipe. **Do NOT re-explore the codebase** — everything you need is documented here.
 
-**Phase 1: Foundation**
-- Setup: Vite + React + Tailwind
-- File structure (see master spec)
-- Design system implementation
-- **CHECKPOINT:** Show color palette, typography working
+### Step 1: Add Config (`src/constants/gameConfig.js`)
 
-**Phase 2: Home & Navigation**  
-- HomePage with game grid
-- GameTile component (active + coming soon states)
-- Navigation flow (home ↔ menu ↔ game)
-- **CHECKPOINT:** Full navigation working, ask for visual review
+Add a `GAME_NAME_CONFIG` export. Use `DIFFICULTY` constants for per-difficulty settings:
 
-**Phase 3: Letter Jager Core**
-- Game menu (difficulty selection)
-- Basic maze rendering
-- Player movement (arrow keys)
-- **CHECKPOINT:** Player can move in maze, ask before proceeding
+```javascript
+import { DIFFICULTY } from './gameConfig';
 
-**Phase 4: Game Mechanics**
-- Letter placement & collection logic
-- Creature AI & collision detection
-- Score & lives system
-- **CHECKPOINT:** Core gameplay loop working, ask for testing
+export const MEMORY_CONFIG = {
+  GRID: {
+    [DIFFICULTY.EASY]: { rows: 4, cols: 4 },
+    [DIFFICULTY.NORMAL]: { rows: 4, cols: 6 },
+    [DIFFICULTY.HARD]: { rows: 6, cols: 6 },
+  },
+  CELEBRATION_DELAY: 1500,
+  SCORING: {
+    PER_ITEM: { [DIFFICULTY.EASY]: 100, [DIFFICULTY.NORMAL]: 80, [DIFFICULTY.HARD]: 60 },
+  },
+};
+```
 
-**Phase 5: Polish & Features**
-- Sound effects (Web Audio API)
-- Win/lose screens
-- LocalStorage for high scores
-- Animations & visual feedback
-- **CHECKPOINT:** Request playtesting feedback
+### Step 2: Add Dutch Text (`src/constants/dutch-text.js`)
 
-**Phase 6: Deployment**
-- GitHub Actions workflow
-- Deploy to GitHub Pages
-- **CHECKPOINT:** Confirm live site works
+Two places to add text:
 
-### Checkpoint Protocol
+**a) Difficulty descriptions** — inside `menu.difficultyDescription`:
+```javascript
+'game-id': {
+  easy: 'Description for makkelijk',
+  normal: 'Description for normaal',
+  hard: 'Description for moeilijk',
+},
+```
 
-At each CHECKPOINT:
-1. **Stop and summarize** what was built
-2. **Ask specific questions** if anything is unclear
-3. **Request validation** before proceeding
-4. **Offer to show** key components/screens
-5. **Never assume** - always confirm before moving to next phase
+**b) Game-specific section** — add a top-level key (camelCase):
+```javascript
+gameName: {
+  name: 'Display Name',
+  instructions: { howToPlay: '...' },
+  hud: { score: '...', moves: '...' },
+  feedback: { allComplete: '...', tryAgain: '...' },
+},
+```
+
+Existing shared text you can reuse: `DUTCH_TEXT.game.score`, `DUTCH_TEXT.feedback.newHighScore`, `DUTCH_TEXT.feedback.playAgain`, `DUTCH_TEXT.feedback.changeDifficulty`, `DUTCH_TEXT.menu.backHome`.
+
+### Step 3: Create Game Files (`src/components/games/GameName/`)
+
+**Component signature** — games receive these props from `GameContainer`:
+```javascript
+export function GameName({ difficulty, language, onExit, onChangeDifficulty }) {}
+```
+
+For `skipDifficulty: true` games, `difficulty` is always `'makkelijk'` and `onChangeDifficulty` is unused. Use `onExit` to return home.
+
+**Turn-based game pattern** (no game loop — like Muntenkluis, Sudoku, Memory):
+```javascript
+import { useState, useCallback } from 'react';
+import { useSoundEffects } from '../../../hooks/useSoundEffects';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import { Confetti } from '../../common/Confetti';
+import { Button } from '../../common/Button';
+
+function initRound(difficulty) {
+  return { /* initial state */ gameStatus: 'playing' };
+}
+
+export function GameName({ difficulty, onExit, onChangeDifficulty }) {
+  const [state, setState] = useState(() => initRound(difficulty));
+  const [scores, setScores] = useLocalStorage('gamehub-scores', {});
+  const { playSound } = useSoundEffects();
+  const [isNewHighScore, setIsNewHighScore] = useState(false);
+
+  // Game logic handlers...
+
+  if (state.gameStatus === 'won') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-bg-primary to-bg-secondary flex flex-col items-center justify-center p-4">
+        <Confetti />
+        {/* GameOver component */}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-bg-primary to-bg-secondary flex flex-col items-center p-4 no-select">
+      {/* HUD + Game area */}
+    </div>
+  );
+}
+```
+
+**PixiJS canvas game pattern** (like CijferVissen, BosRitje):
+- Create a `Canvas.jsx` that initializes `new Application()` in `useEffect`
+- Use `actionsRef` to expose animation methods to parent
+- Draw with `Graphics` primitives (no sprite files)
+- Animate with `app.ticker.add()` + `performance.now()`
+
+### Step 4: Register (`src/games/index.js`)
+
+```javascript
+import { GameName } from '../components/games/GameName/GameName';
+
+// In GAMES object:
+'game-id': {
+  id: 'game-id',
+  component: GameName,
+  name: 'Display Name',
+  icon: '🎮',
+  description: 'Short Dutch description',
+  available: true,
+  color: 'from-primary-blue to-primary-green',
+  // skipDifficulty: true,  // Add this to skip difficulty menu
+},
+```
+
+### Step 5: Build & Test
+
+```bash
+npm run build   # Must pass with zero errors
+```
+
+### Available Common Components
+
+| Component | Import | Usage |
+|-----------|--------|-------|
+| `Button` | `../../common/Button` | `<Button variant="success\|ghost\|accent\|warning" size="lg\|md">` |
+| `Confetti` | `../../common/Confetti` | `<Confetti />` — 40 falling particles |
+| `FlashOverlay` | `../../common/FlashOverlay` | `<FlashOverlay trigger={count} />` — white flash on wrong answer |
+| `TouchControls` | `../../common/TouchControls` | `<TouchControls onDirection={fn} />` — D-pad for movement games |
+| `ScoreDisplay` | `../../common/ScoreDisplay` | `<ScoreDisplay score={n} />` |
+
+### Available Hooks
+
+| Hook | Usage |
+|------|-------|
+| `useSoundEffects()` | `const { playSound } = useSoundEffects()` |
+| `useLocalStorage(key, default)` | `const [val, setVal, refresh] = useLocalStorage('key', {})` |
+
+**Sound effects:** `playSound('collect')` (happy tone), `playSound('wrong')` (buzz), `playSound('complete')` (melody), `playSound('hit')` (thud), `playSound('highscore')` (fanfare).
+
+### High Score Pattern
+
+Scores stored per difficulty in `gamehub-scores`:
+```javascript
+const [scores, setScores] = useLocalStorage('gamehub-scores', {});
+
+// Save score
+const gameScores = scores['game-id'] || {};
+if (newScore > (gameScores[difficulty] || 0)) {
+  setScores((s) => ({
+    ...s,
+    'game-id': { ...(s['game-id'] || {}), [difficulty]: newScore },
+  }));
+  playSound('highscore');
+}
+```
+
+For `skipDifficulty` games (like BosRitje), store a single number instead: `scores['game-id'] = totalScore`.
+
+### Design Guidelines for Games
+
+- **Touch targets:** min 56px, ideally 60px+
+- **Fonts:** `font-display` for headings/labels, `font-body` for text
+- **Colors:** use design system (`primary-blue-dark`, `primary-coral-dark`, `text-primary`, `text-secondary`, `success`, `error`)
+- **Layout:** `min-h-screen bg-gradient-to-b from-bg-primary to-bg-secondary`
+- **HUD:** white/80 backdrop-blur rounded bar at top
+- **No lose condition preferred** — kids always succeed eventually (encouraging)
+- **Landscape tablet:** use Tailwind `landscape:` variant for side-by-side layouts
+
+### Existing Games for Reference
+
+| Game | Type | Key Pattern |
+|------|------|-------------|
+| Muntenkluis | Turn-based, React only | Simplest template — `initRound()` → state machine |
+| Memory | Turn-based, React only | CSS animations, timed callbacks |
+| Sudoku | Turn-based, React only | Grid-based, cell selection |
+| Letter Leren | Turn-based, React only | Word/picture matching |
+| CijferVissen | PixiJS canvas | Pond animations, fish AI |
+| BosRitje | PixiJS canvas | Grid tiles, car movement, 15 levels |
+| PinguinAvontuur | RAF game loop | Maze generation, keyboard/touch movement |
+| Tetris | RAF game loop | Falling blocks, keyboard input |
 
 ## Critical Requirements
 
@@ -163,71 +286,11 @@ npm run preview         # Preview production build
 - Group related files in same folder
 - Keep components small and focused
 
-## Common Patterns
-
-### Dutch Text Usage
-```javascript
-import { DUTCH_TEXT } from '../constants/dutch-text';
-
-// Always use constants, never hardcode Dutch text
-<button>{DUTCH_TEXT.menu.startGame}</button>
-```
-
-### Game Registration
-```javascript
-// Add to games/index.js
-export const GAMES = {
-  'new-game': {
-    id: 'new-game',
-    component: NewGame,
-    name: 'Game Name',
-    icon: '🎮',
-    available: true,
-    color: 'from-primary-blue to-primary-green',
-  },
-};
-```
-
-### Sound Effects
-```javascript
-const { playSound } = useSoundEffects();
-playSound('collect'); // 'collect', 'wrong', 'complete'
-```
-
 ## Testing Approach
 
-Before marking ANY phase complete:
-1. Verify all Dutch text is correct
-2. Test on both desktop and tablet sizes
-3. Click through full user flow
-4. Check console for errors
-5. Ask for user validation at checkpoints
-
-## Questions & Clarifications
-
-**When stuck or unclear:**
-- Reference the master spec for detailed guidance
-- Ask specific questions at checkpoints
-- Suggest alternatives if requirements seem conflicting
-- Never guess - always clarify with user
-
-**Red flags to raise:**
-- English text appearing in UI
-- Complex backend/database needs arising
-- Costs being introduced
-- Architecture getting too complicated
-- Kids might find something scary/confusing
-
-## Success Criteria
-
-✅ 5-year-old can start game independently (no reading English)  
-✅ Home page shows Letter Jager + 2 "coming soon" tiles  
-✅ Full navigation flow works (home → game → home)  
-✅ Letter Jager playable with 3 difficulty levels  
-✅ High scores save between sessions  
-✅ Deployed live on GitHub Pages  
-✅ New game can be added easily (<1 hour)
-
----
-
-**Remember:** Work in phases, validate at checkpoints, keep it simple, make it kid-friendly!
+Before completing any game:
+1. `npm run build` must pass with zero errors
+2. Verify all Dutch text is correct (no English in UI)
+3. Test on both desktop and tablet sizes
+4. Click through full user flow
+5. Cards/buttons large enough for small fingers (56px+)

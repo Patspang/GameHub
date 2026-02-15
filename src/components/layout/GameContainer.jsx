@@ -1,13 +1,37 @@
 // Wrapper that loads the correct game component based on the selected game
-// Phase 2: placeholder with back button; Phase 3: actual game rendering
 
+import { useRef, useCallback } from 'react';
 import { GAMES } from '../../games';
 import { DUTCH_TEXT } from '../../constants/dutch-text';
+import { trackEvent } from '../../utils/analytics';
 import { Button } from '../common/Button';
 
 export function GameContainer({ gameId, difficulty, language, onExit, onChangeDifficulty }) {
   const game = GAMES[gameId];
   const GameComponent = game?.component;
+  const startTimeRef = useRef(Date.now());
+
+  const handleExit = useCallback(() => {
+    const durationSec = Math.round((Date.now() - startTimeRef.current) / 1000);
+    trackEvent('game_end', {
+      game_id: gameId,
+      game_name: game?.name,
+      difficulty,
+      duration_sec: durationSec,
+    });
+    onExit();
+  }, [gameId, game, difficulty, onExit]);
+
+  const handleChangeDifficulty = useCallback(() => {
+    const durationSec = Math.round((Date.now() - startTimeRef.current) / 1000);
+    trackEvent('game_end', {
+      game_id: gameId,
+      game_name: game?.name,
+      difficulty,
+      duration_sec: durationSec,
+    });
+    onChangeDifficulty();
+  }, [gameId, game, difficulty, onChangeDifficulty]);
 
   // Phase 3 will replace this with the actual game component
   if (!GameComponent) {
@@ -34,8 +58,8 @@ export function GameContainer({ gameId, difficulty, language, onExit, onChangeDi
     <GameComponent
       difficulty={difficulty}
       language={language}
-      onExit={onExit}
-      onChangeDifficulty={onChangeDifficulty}
+      onExit={handleExit}
+      onChangeDifficulty={handleChangeDifficulty}
     />
   );
 }

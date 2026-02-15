@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { SCREENS, DIFFICULTY } from './constants/gameConfig';
 import { GAMES } from './games';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { trackGameStart, trackDifficultySelect } from './utils/analytics';
 import { Header } from './components/layout/Header';
 import { HomePage } from './components/layout/HomePage';
 import { GameMenu } from './components/common/GameMenu';
@@ -18,9 +19,11 @@ export function App() {
 
   const handleGameSelect = (gameId) => {
     setSelectedGame(gameId);
-    if (GAMES[gameId]?.skipDifficulty) {
+    const game = GAMES[gameId];
+    if (game?.skipDifficulty) {
       setDifficulty(DIFFICULTY.EASY);
       setCurrentScreen(SCREENS.PLAYING);
+      trackGameStart(gameId, game.name, DIFFICULTY.EASY);
     } else {
       setCurrentScreen(SCREENS.GAME_MENU);
     }
@@ -29,6 +32,9 @@ export function App() {
   const handleDifficultySelect = (diff) => {
     setDifficulty(diff);
     setCurrentScreen(SCREENS.PLAYING);
+    const game = GAMES[selectedGame];
+    trackDifficultySelect(selectedGame, game?.name, diff);
+    trackGameStart(selectedGame, game?.name, diff);
   };
 
   const handleBackToHome = () => {
