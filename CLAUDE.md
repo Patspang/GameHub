@@ -201,6 +201,34 @@ For `skipDifficulty` games (like BosRitje), store a single number instead: `scor
 - **No lose condition preferred** — kids always succeed eventually (encouraging)
 - **Landscape tablet:** use Tailwind `landscape:` variant for side-by-side layouts
 
+### Step 6: Update Analytics Tracking
+
+**IMPORTANT:** For every significant change — new game, new button, new user flow — update the GA4 tracking. This is NOT optional.
+
+**Analytics utility:** `src/utils/analytics.js` — thin wrapper around `window.gtag()`.
+
+**Current events tracked:**
+
+| Event | Where Fired | Parameters |
+|-------|-------------|------------|
+| `game_start` | `App.jsx` — when game begins | `game_id`, `game_name`, `difficulty` |
+| `difficulty_select` | `App.jsx` — when difficulty chosen | `game_id`, `game_name`, `difficulty` |
+| `game_end` | `GameContainer.jsx` — on exit or difficulty change | `game_id`, `game_name`, `difficulty`, `duration_sec` |
+
+**How to add tracking for a new event:**
+1. Add a named function to `src/utils/analytics.js`:
+   ```javascript
+   export function trackNewEvent(param1, param2) {
+     trackEvent('new_event_name', { param1, param2 });
+   }
+   ```
+2. Import and call it at the appropriate point in the UI
+3. Keep events **anonymous** — no PII, no player names, no identifying data
+
+**GA4 property:** `G-H0N71FNZLF` (configured in `index.html` with `anonymize_ip: true`)
+
+**When adding a new game**, the existing `game_start`, `difficulty_select`, and `game_end` events fire automatically (handled in `App.jsx` and `GameContainer.jsx`). No extra tracking code is needed in the game component itself unless you add game-specific events (e.g. `level_complete` in BosRitje).
+
 ### Existing Games for Reference
 
 | Game | Type | Key Pattern |

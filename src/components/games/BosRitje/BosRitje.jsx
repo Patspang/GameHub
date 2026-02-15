@@ -178,10 +178,11 @@ export function BosRitje({ onExit }) {
           canvasActionsRef.current.showCollision();
         }
 
-        // Stay on planning screen — reset car, keep commands for editing
+        // Stay on planning screen — trim commands from the failing step onward
         const collisionMessages = DUTCH_TEXT.bosRitje.feedback.collision;
         const msg = collisionMessages[collisionType] || collisionMessages.outOfBounds;
         setTimeout(() => {
+          setCommands((prev) => prev.slice(0, stepIndex));
           setGamePhase('planning');
           setExecutionIndex(-1);
           setFeedbackMessage(msg);
@@ -191,7 +192,6 @@ export function BosRitje({ onExit }) {
               levelData.startX, levelData.startY, levelData.startDirection
             );
           }
-          // Clear message after a few seconds
           setTimeout(() => setFeedbackMessage(null), 3000);
         }, 600);
         return;
