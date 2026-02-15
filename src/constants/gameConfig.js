@@ -239,6 +239,18 @@ export const PINGUIN_CONFIG = {
   },
 };
 
+// Bos Ritje (forest route planning) configuration
+export const BOS_RITJE_CONFIG = {
+  TOTAL_LEVELS: 15,
+  MOVE_DURATION: 400,
+  TURN_DURATION: 250,
+  SCORING: {
+    STAR_3_THRESHOLD: 0,
+    STAR_2_THRESHOLD: 2,
+  },
+  CELEBRATION_DELAY: 1500,
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

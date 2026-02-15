@@ -10,6 +10,7 @@ import { Sudoku } from '../components/games/Sudoku/Sudoku';
 import { CijferVissen } from '../components/games/CijferVissen/CijferVissen';
 import { Tekenen } from '../components/games/Tekenen/Tekenen';
 import { PinguinAvontuur } from '../components/games/PinguinAvontuur/PinguinAvontuur';
+import { BosRitje } from '../components/games/BosRitje/BosRitje';
 
 export const GAMES = {
   'letter-jager': {
@@ -93,5 +94,15 @@ export const GAMES = {
     description: 'Help de pinguïn naar de zee!',
     available: true,
     color: 'from-primary-blue to-primary-green',
+  },
+  'bos-ritje': {
+    id: 'bos-ritje',
+    component: BosRitje,
+    name: 'Bos Ritje',
+    icon: '🚗',
+    description: 'Plan de route door het bos!',
+    available: true,
+    color: 'from-primary-green to-primary-yellow',
+    skipDifficulty: true,
   },
 };
