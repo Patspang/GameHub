@@ -10,11 +10,15 @@ import { ScoreDisplay } from './ScoreDisplay';
 function getDifficultyOptions(gameId) {
   const descriptions = DUTCH_TEXT.menu.difficultyDescription[gameId]
     || DUTCH_TEXT.menu.difficultyDescription['letter-jager'];
-  return [
+  const options = [
     { key: DIFFICULTY.EASY, label: DUTCH_TEXT.menu.difficulty.easy, description: descriptions.easy, variant: 'success' },
     { key: DIFFICULTY.NORMAL, label: DUTCH_TEXT.menu.difficulty.normal, description: descriptions.normal, variant: 'primary' },
     { key: DIFFICULTY.HARD, label: DUTCH_TEXT.menu.difficulty.hard, description: descriptions.hard, variant: 'warning' },
   ];
+  if (descriptions.twoPlayer) {
+    options.push({ key: '2spelers', label: '2 Spelers', description: descriptions.twoPlayer, variant: 'accent' });
+  }
+  return options;
 }
 
 export function GameMenu({ gameId, onSelectDifficulty, onBack, highScores, language, onLanguageChange }) {

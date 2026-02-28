@@ -78,6 +78,12 @@ export const DUTCH_TEXT = {
         normal: '4x6 kaarten (12 paren)',
         hard: '6x6 kaarten (18 paren)',
       },
+      'boter-kaas-eieren': {
+        easy: 'Tegen de computer (makkelijk)',
+        normal: 'Tegen de computer (normaal)',
+        hard: 'Tegen de computer (slim!)',
+        twoPlayer: 'Speel samen op hetzelfde scherm',
+      },
     },
     highScore: 'Hoogste Score',
     settings: 'Instellingen',
@@ -326,6 +332,28 @@ export const DUTCH_TEXT = {
     feedback: {
       allComplete: 'Alle paren gevonden! Geweldig!',
       movesResult: 'Je hebt het gehaald in {moves} zetten!',
+    },
+  },
+  boterKaasEieren: {
+    name: 'Boter Kaas & Eieren',
+    hud: {
+      yourTurn: 'Jouw beurt',
+      computerThinking: 'Computer denkt...',
+      player1Turn: 'Speler 1 (❌)',
+      player2Turn: 'Speler 2 (⭕)',
+      wins: 'Gewonnen',
+      draws: 'Gelijk',
+      score: 'Score',
+    },
+    feedback: {
+      youWin: 'Jij wint! Goed zo!',
+      computerWins: 'De computer wint! Goed geprobeerd!',
+      player1Wins: 'Speler 1 wint!',
+      player2Wins: 'Speler 2 wint!',
+      draw: 'Gelijkspel!',
+    },
+    mode: {
+      twoPlayers: '2 Spelers',
     },
   },
   snake: {

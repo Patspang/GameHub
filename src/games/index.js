@@ -12,6 +12,7 @@ import { Tekenen } from '../components/games/Tekenen/Tekenen';
 import { PinguinAvontuur } from '../components/games/PinguinAvontuur/PinguinAvontuur';
 import { BosRitje } from '../components/games/BosRitje/BosRitje';
 import { Memory } from '../components/games/Memory/Memory';
+import { TicTacToe } from '../components/games/TicTacToe/TicTacToe';
 
 export const GAMES = {
   'letter-jager': {
@@ -125,5 +126,15 @@ export const GAMES = {
     available: true,
     color: 'from-primary-coral to-primary-blue',
     createdAt: '2026-02-13',
+  },
+  'boter-kaas-eieren': {
+    id: 'boter-kaas-eieren',
+    component: TicTacToe,
+    name: 'Boter Kaas & Eieren',
+    icon: '⭕',
+    description: 'Drie op een rij!',
+    available: true,
+    color: 'from-primary-blue to-primary-coral',
+    createdAt: '2026-02-28',
   },
 };

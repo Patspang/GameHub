@@ -220,3 +220,9 @@ h1, h2, h3, h4, h5, h6 {
 .animate-sea-wave {
   animation: sea-wave 1.5s ease-in-out infinite;
 }
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}

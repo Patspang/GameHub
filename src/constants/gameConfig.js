@@ -274,6 +274,14 @@ export const MEMORY_CONFIG = {
   },
 };
 
+// Boter Kaas & Eieren (Tic Tac Toe) configuration
+export const TICTACTOE_CONFIG = {
+  BOARD_SIZE: 3,
+  AI_DELAY: 500,
+  ROUND_RESET_DELAY: 2000,
+  SYMBOLS: { X: '❌', O: '⭕' },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',
