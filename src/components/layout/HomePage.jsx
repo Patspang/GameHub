@@ -35,14 +35,19 @@ export function HomePage({ onSelectGame, highScores, playCounts, playerName, onN
       .filter((g) => g.available && (playCounts?.[g.id] || 0) > 0)
       .sort((a, b) => (playCounts[b.id] || 0) - (playCounts[a.id] || 0));
 
+    const sortByNewest = (games) =>
+      [...games].sort((a, b) =>
+        (b.createdAt || '2026-01-01').localeCompare(a.createdAt || '2026-01-01')
+      );
+
     if (gamesWithCounts.length < 3) {
-      return { topGames: [], remainingGames: allGames };
+      return { topGames: [], remainingGames: sortByNewest(allGames) };
     }
 
     const top3Ids = new Set(gamesWithCounts.slice(0, 3).map((g) => g.id));
     return {
       topGames: gamesWithCounts.slice(0, 3),
-      remainingGames: allGames.filter((g) => !top3Ids.has(g.id)),
+      remainingGames: sortByNewest(allGames.filter((g) => !top3Ids.has(g.id))),
     };
   }, [playCounts]);
 

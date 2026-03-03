@@ -13,6 +13,7 @@ import { PinguinAvontuur } from '../components/games/PinguinAvontuur/PinguinAvon
 import { BosRitje } from '../components/games/BosRitje/BosRitje';
 import { Memory } from '../components/games/Memory/Memory';
 import { TicTacToe } from '../components/games/TicTacToe/TicTacToe';
+import { Domino } from '../components/games/Domino/Domino';
 
 export const GAMES = {
   'letter-jager': {
@@ -136,5 +137,15 @@ export const GAMES = {
     available: true,
     color: 'from-primary-blue to-primary-coral',
     createdAt: '2026-02-28',
+  },
+  'domino': {
+    id: 'domino',
+    component: Domino,
+    name: 'Domino',
+    icon: '🎲',
+    description: 'Leg dominostenen aan elkaar!',
+    available: true,
+    color: 'from-primary-green to-primary-blue',
+    createdAt: '2026-03-03',
   },
 };

@@ -78,6 +78,11 @@ export const DUTCH_TEXT = {
         normal: '4x6 kaarten (12 paren)',
         hard: '6x6 kaarten (18 paren)',
       },
+      'domino': {
+        easy: 'Kleine set (tot 4 stippen)',
+        normal: 'Middel set (tot 5 stippen)',
+        hard: 'Grote set (tot 6 stippen)',
+      },
       'boter-kaas-eieren': {
         easy: 'Tegen de computer (makkelijk)',
         normal: 'Tegen de computer (normaal)',
@@ -354,6 +359,30 @@ export const DUTCH_TEXT = {
     },
     mode: {
       twoPlayers: '2 Spelers',
+    },
+  },
+  domino: {
+    name: 'Domino',
+    instructions: {
+      howToPlay: 'Leg dominostenen aan elkaar! De stippen moeten kloppen.',
+    },
+    hud: {
+      pot: 'Pot',
+      yourTurn: 'Jouw beurt',
+      computerThinking: 'Computer denkt...',
+      totalScore: 'Totaal',
+    },
+    feedback: {
+      youWin: 'Jij wint de ronde! Super!',
+      computerWins: 'De computer is eerst klaar! Goed geprobeerd!',
+      blocked: 'Niemand kan meer! Goed gespeeld!',
+      mustDraw: 'Geen steen past, je pakt er eentje!',
+      mustPass: 'Geen stenen meer. Je moet passen!',
+      selectEnd: 'Kies een kant!',
+      tapTile: 'Tik op een steen om te spelen',
+      placedFirst: 'Leg je eerste steen!',
+      gameOver: 'Goed gespeeld!',
+      roundsPlayed: 'Rondes gespeeld',
     },
   },
   snake: {

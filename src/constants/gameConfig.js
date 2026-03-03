@@ -282,6 +282,28 @@ export const TICTACTOE_CONFIG = {
   SYMBOLS: { X: '❌', O: '⭕' },
 };
 
+// Domino configuration
+export const DOMINO_CONFIG = {
+  MAX_PIPS: {
+    [DIFFICULTY.EASY]: 4,      // double-four: 15 tiles
+    [DIFFICULTY.NORMAL]: 5,    // double-five: 21 tiles
+    [DIFFICULTY.HARD]: 6,      // double-six: 28 tiles
+  },
+  HAND_SIZE: {
+    [DIFFICULTY.EASY]: 5,
+    [DIFFICULTY.NORMAL]: 6,
+    [DIFFICULTY.HARD]: 7,
+  },
+  AI_DELAY: 700,
+  DRAW_DELAY: 400,
+  CELEBRATION_DELAY: 1500,
+  ROUND_RESET_DELAY: 2500,
+  SCORING: {
+    MIN_ROUND_POINTS: 10,
+    EMPTY_HAND_BONUS: 50,
+  },
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

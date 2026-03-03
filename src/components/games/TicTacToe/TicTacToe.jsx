@@ -18,6 +18,7 @@ export function TicTacToe({ difficulty, onExit, onChangeDifficulty }) {
   const isTwoPlayer = difficulty === '2spelers';
   const [board, setBoard] = useState(createBoard);
   const [currentPlayer, setCurrentPlayer] = useState('X');
+  const [roundNumber, setRoundNumber] = useState(0);
   const [result, setResult] = useState(null); // { winner, winningCells }
   const [scores, setScores] = useState({ X: 0, O: 0, draws: 0 });
   const [feedback, setFeedback] = useState(null);
@@ -64,15 +65,17 @@ export function TicTacToe({ difficulty, onExit, onChangeDifficulty }) {
     }
     setFeedback(feedbackText);
 
-    // Auto-start next round
+    // Auto-start next round — alternate starting player
     resetTimeoutRef.current = setTimeout(() => {
+      const nextRound = roundNumber + 1;
+      setRoundNumber(nextRound);
       setBoard(createBoard());
-      setCurrentPlayer('X');
+      setCurrentPlayer(nextRound % 2 === 0 ? 'X' : 'O');
       setResult(null);
       setFeedback(null);
       setShowConfetti(false);
     }, TICTACTOE_CONFIG.ROUND_RESET_DELAY);
-  }, [isTwoPlayer, playSound]);
+  }, [isTwoPlayer, playSound, roundNumber]);
 
   const makeMove = useCallback((index, player) => {
     setBoard((prev) => {
