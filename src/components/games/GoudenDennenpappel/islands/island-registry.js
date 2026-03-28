@@ -6,9 +6,9 @@ import { OudWoud } from './OudWoud/OudWoud';
 export const ISLAND_REGISTRY = [
   {
     id: 'oud-woud',
-    name: 'Het Oude Woud',
+    name: 'Hoofdstuk 1: Het Oude Woud',
     icon: '🌲',
-    description: 'Zoek de drie rode paddenstoelen!',
+    description: 'Hoofdstuk 1: Zoek de drie paddenstoelen en vind het eerste stukje van de schatkaart.',
     component: OudWoud,
   },
   // Future islands:

@@ -53,6 +53,53 @@ function makeGrassTexture() {
   return tex;
 }
 
+function makeWaterTexture() {
+  const size = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Deep water base
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, '#1a6e9e');
+  grad.addColorStop(0.5, '#1e7db5');
+  grad.addColorStop(1, '#1560a0');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+
+  // Ripple lines
+  for (let i = 0; i < 28; i++) {
+    const y = (i / 28) * size + Math.random() * 10;
+    ctx.strokeStyle = `rgba(120, 200, 240, ${0.07 + Math.random() * 0.12})`;
+    ctx.lineWidth = 1.5 + Math.random() * 2;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    for (let x = 0; x <= size; x += 18) {
+      ctx.lineTo(x, y + Math.sin(x * 0.04 + i) * 6);
+    }
+    ctx.stroke();
+  }
+
+  // Sparkle dots
+  ctx.globalAlpha = 0.25;
+  for (let i = 0; i < 120; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const r = 1 + Math.random() * 2.5;
+    ctx.fillStyle = '#b8e4f8';
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(14, 14);
+  return tex;
+}
+
 function makeDirtPathTexture() {
   const size = 512;
   const canvas = document.createElement('canvas');
@@ -90,43 +137,176 @@ function makeDirtPathTexture() {
   return tex;
 }
 
-// ─── Pine Tree (5 cone layers, PBR, color variation) ─────────────────────────
+// ─── GDP-004: Canvas-generated normal maps ────────────────────────────────────
+// Normal maps are painted directly as RGB, encoding surface normal direction:
+//   R = +X tangent slope,  G = +Y tangent slope,  B = up (Z).
+//   Flat surface = (128, 128, 255) = {0,0,1} normal.
+
+function makeGrassNormalMap() {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Flat base (pointing up)
+  ctx.fillStyle = 'rgb(128,128,255)';
+  ctx.fillRect(0, 0, size, size);
+
+  // Blade edges: thin strokes tilting slightly left/right
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const tiltR = 108 + Math.floor(Math.random() * 40); // slight right lean
+    const tiltG = 128;
+    ctx.strokeStyle = `rgb(${tiltR},${tiltG},220)`;
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.4 + Math.random() * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + (Math.random() - 0.5) * 4, y - 7);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(18, 18); // match grass color texture
+  return tex;
+}
+
+function makeDirtNormalMap() {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Flat base
+  ctx.fillStyle = 'rgb(128,128,255)';
+  ctx.fillRect(0, 0, size, size);
+
+  // Pebble bumps — small ellipses with raised-edge normals
+  for (let i = 0; i < 180; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const r = 3 + Math.random() * 10;
+    // left half of ellipse: normal tilts +X (reddish), right half: -X (blueish)
+    const grad = ctx.createRadialGradient(x - r * 0.3, y, 0, x, y, r);
+    grad.addColorStop(0,   'rgba(180,128,200,0.7)');   // raised centre
+    grad.addColorStop(0.6, 'rgba(100,128,240,0.4)');   // sloped edge
+    grad.addColorStop(1,   'rgba(128,128,255,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(x, y, r, r * 0.55, Math.random() * Math.PI, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Rut grooves — horizontal stripes dipping slightly
+  ctx.globalAlpha = 0.25;
+  for (let y = 0; y < size; y += 12) {
+    ctx.strokeStyle = 'rgb(128,100,220)'; // slight downward slope
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(size, y + Math.sin(y * 0.05) * 3);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(2, 8); // match dirt path color texture
+  return tex;
+}
+
+function makeBarkNormalMap() {
+  const size = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Flat base
+  ctx.fillStyle = 'rgb(128,128,255)';
+  ctx.fillRect(0, 0, size, size);
+
+  // Vertical bark ridges — alternating left/right slopes
+  const ridgeCount = 18;
+  for (let i = 0; i < ridgeCount; i++) {
+    const x = (i / ridgeCount) * size;
+    const w = size / ridgeCount;
+    // Ridge crest: tilted right on left half, left on right half
+    const grad = ctx.createLinearGradient(x, 0, x + w, 0);
+    grad.addColorStop(0,    'rgba(90,128,210,0.6)');  // slopes left
+    grad.addColorStop(0.45, 'rgba(180,128,210,0.6)'); // ridge crest (tilts +X)
+    grad.addColorStop(1,    'rgba(128,128,255,0.2)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, 0, w, size);
+  }
+
+  // Horizontal cracks — slight downward dip
+  ctx.globalAlpha = 0.3;
+  for (let y = 14; y < size; y += 14 + Math.random() * 10) {
+    ctx.strokeStyle = 'rgb(128,100,220)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    for (let xi = 0; xi <= size; xi += 16) {
+      ctx.lineTo(xi, y + (Math.random() - 0.5) * 4);
+    }
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  // Cylinder UVs repeat naturally; ~2 repeats around, 4 up the trunk
+  tex.repeat.set(2, 4);
+  return tex;
+}
+
+// ─── Pine Tree — InstancedMesh data & helpers ────────────────────────────────
 
 const LAYER_COLORS = [0x1a4a0e, 0x1f5512, 0x286618, 0x2e761e, 0x348424];
 const LAYER_H      = [1.7,  2.65, 3.55, 4.35, 5.05];
 const LAYER_R      = [1.25, 1.0,  0.76, 0.54, 0.36];
 
-function createTree(x, z, scale = 1) {
-  const group = new THREE.Group();
+// Reusable objects for zero-alloc matrix computation (used during init and wobble)
+const _matA   = new THREE.Matrix4();
+const _matB   = new THREE.Matrix4();
+const _posV   = new THREE.Vector3();
+const _quatQ  = new THREE.Quaternion();
+const _scaleV = new THREE.Vector3();
+const _eulerE = new THREE.Euler();
+const _outM   = new THREE.Matrix4();
 
-  const trunkColor = new THREE.Color(0x6b3a2a);
-  trunkColor.lerp(new THREE.Color(0x4a2518), Math.random() * 0.25);
-  const trunk = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.14 * scale, 0.30 * scale, 2.4 * scale, 7),
-    makeMat(trunkColor, 0.95)
-  );
-  trunk.position.y = 1.2 * scale;
-  trunk.castShadow = true;
-  trunk.receiveShadow = true;
-  group.add(trunk);
+// Builds the world matrix for one mesh within a tree:
+//   base: translate to (x,0,z), apply world-Z wobble tilt
+//   local: lift to localY, rotate Y by rotY, uniform scale s
+function buildTreeMemberMatrix(out, x, z, localY, rotY, s, wobbleZ) {
+  _matA.makeRotationZ(wobbleZ);
+  _matA.setPosition(x, 0, z);
+  _posV.set(0, localY, 0);
+  _eulerE.set(0, rotY, 0);
+  _quatQ.setFromEuler(_eulerE);
+  _scaleV.setScalar(s);
+  _matB.compose(_posV, _quatQ, _scaleV);
+  out.multiplyMatrices(_matA, _matB);
+}
 
+// Updates all 6 InstancedMesh matrices for a single tree index.
+// wobbleZ = 0 for upright, non-zero during bump animation.
+export function applyTreeWobble(treeMeshes, treeTransforms, treeIdx, wobbleZ) {
+  const tf = treeTransforms[treeIdx];
+  buildTreeMemberMatrix(_outM, tf.x, tf.z, 1.2 * tf.scale, tf.yaw, tf.scale, wobbleZ);
+  treeMeshes[0].setMatrixAt(treeIdx, _outM);
+  treeMeshes[0].instanceMatrix.needsUpdate = true;
   for (let i = 0; i < 5; i++) {
-    const col = new THREE.Color(LAYER_COLORS[i]);
-    col.lerp(new THREE.Color(LAYER_COLORS[Math.min(i + 1, 4)]), Math.random() * 0.25);
-    const rVar = 0.88 + Math.random() * 0.24;
-    const cone = new THREE.Mesh(
-      new THREE.ConeGeometry(LAYER_R[i] * scale * rVar, 1.65 * scale, 7),
-      makeMat(col, 0.82)
-    );
-    cone.position.y = LAYER_H[i] * scale;
-    cone.rotation.y = (i * Math.PI * 2) / 5 + Math.random() * 0.35;
-    cone.castShadow = true;
-    group.add(cone);
+    buildTreeMemberMatrix(_outM, tf.x, tf.z, LAYER_H[i] * tf.scale, tf.coneYaws[i], tf.scale, wobbleZ);
+    treeMeshes[i + 1].setMatrixAt(treeIdx, _outM);
+    treeMeshes[i + 1].instanceMatrix.needsUpdate = true;
   }
-
-  group.position.set(x, 0, z);
-  group.rotation.y = Math.random() * Math.PI * 2;
-  return group;
 }
 
 // ─── Red Mushroom ─────────────────────────────────────────────────────────────
@@ -139,7 +319,6 @@ function createMushroom(x, z) {
     makeMat(0xf5edd8, 0.75)
   );
   stem.position.y = 0.21;
-  stem.castShadow = true;
   group.add(stem);
 
   const cap = new THREE.Mesh(
@@ -147,7 +326,6 @@ function createMushroom(x, z) {
     new THREE.MeshStandardMaterial({ color: 0xe01414, roughness: 0.55 })
   );
   cap.position.y = 0.42;
-  cap.castShadow = true;
   group.add(cap);
 
   const spotMat = makeMat(0xffffff, 0.6);
@@ -222,7 +400,6 @@ function createRock(x, z, scale = 1) {
   const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(size, 0), makeMat(col, 0.9));
   rock.position.set(x, size * 0.55, z);
   rock.rotation.set(Math.random() * 2, Math.random() * 2, Math.random() * 0.8);
-  rock.castShadow = true;
   rock.receiveShadow = true;
   return rock;
 }
@@ -283,7 +460,6 @@ function createPinecone(x, z) {
   cone.position.set(x, 0.09, z);
   cone.rotation.y = Math.random() * Math.PI * 2;
   cone.rotation.z = Math.random() * 0.4 - 0.2;
-  cone.castShadow = true;
   return cone;
 }
 
@@ -380,17 +556,64 @@ function createGate(scene) {
 
 export function buildOudWoudScene(scene) {
 
-  // Textured ground
+  // ─── Island bounds ─────────────────────────────────────────────────────────
+  // x: -20 → +36  (56 units wide)
+  // z: +19 → -73  (92 units long)
+  const ISLAND_W = 56, ISLAND_D = 92;
+  const ISLAND_CX = 8, ISLAND_CZ = -27;
+  const islandBounds = {
+    minX: ISLAND_CX - ISLAND_W / 2,  // -20
+    maxX: ISLAND_CX + ISLAND_W / 2,  // +36
+    minZ: ISLAND_CZ - ISLAND_D / 2,  // -73
+    maxZ: ISLAND_CZ + ISLAND_D / 2,  // +19
+  };
+
+  // Island grass
   const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(150, 150),
-    new THREE.MeshStandardMaterial({ map: makeGrassTexture(), roughness: 0.92 })
+    new THREE.PlaneGeometry(ISLAND_W, ISLAND_D),
+    new THREE.MeshStandardMaterial({
+      map: makeGrassTexture(),
+      normalMap: makeGrassNormalMap(),
+      normalScale: new THREE.Vector2(0.6, 0.6),
+      roughness: 0.92,
+    })
   );
   ground.rotation.x = -Math.PI / 2;
+  ground.position.set(ISLAND_CX, 0, ISLAND_CZ);
   ground.receiveShadow = true;
   scene.add(ground);
 
+  // Water plane surrounding the island
+  const waterMaterial = new THREE.MeshStandardMaterial({ map: makeWaterTexture(), roughness: 0.28, metalness: 0.08 });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), waterMaterial);
+  water.rotation.x = -Math.PI / 2;
+  water.position.y = -0.32;
+  scene.add(water);
+
+  // Sandy cliff-edge strips around island perimeter
+  // BoxGeometry: top face flush with ground (y=0), extends down past water level
+  const cliffMat = new THREE.MeshStandardMaterial({ color: 0xb89560, roughness: 0.95 });
+  const cliffH = 0.55;
+  [
+    // [cx, cz, w, d]
+    [ISLAND_CX,                       ISLAND_CZ + ISLAND_D / 2 + 1.25, ISLAND_W + 6, 2.5],   // north
+    [ISLAND_CX,                       ISLAND_CZ - ISLAND_D / 2 - 1.25, ISLAND_W + 6, 2.5],   // south
+    [ISLAND_CX - ISLAND_W / 2 - 1.25, ISLAND_CZ,                        2.5, ISLAND_D + 6],  // west
+    [ISLAND_CX + ISLAND_W / 2 + 1.25, ISLAND_CZ,                        2.5, ISLAND_D + 6],  // east
+  ].forEach(([cx, cz, w, d]) => {
+    const cliff = new THREE.Mesh(new THREE.BoxGeometry(w, cliffH, d), cliffMat);
+    cliff.position.set(cx, -cliffH / 2, cz);
+    cliff.receiveShadow = true;
+    scene.add(cliff);
+  });
+
   // Textured dirt path
-  const pathMat = new THREE.MeshStandardMaterial({ map: makeDirtPathTexture(), roughness: 0.88 });
+  const pathMat = new THREE.MeshStandardMaterial({
+    map: makeDirtPathTexture(),
+    normalMap: makeDirtNormalMap(),
+    normalScale: new THREE.Vector2(0.8, 0.8),
+    roughness: 0.88,
+  });
 
   const path1 = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 33), pathMat);
   path1.rotation.x = -Math.PI / 2;
@@ -410,6 +633,7 @@ export function buildOudWoudScene(scene) {
 
   // ─── Trees ──────────────────────────────────────────────────────────────
   const treeData = [
+    // ── Original 46 trees ────────────────────────────────────────────────
     { x: -4.0, z: 2   }, { x: -5.2, z: -4  }, { x: -4.0, z: -10 },
     { x: -5.2, z: -16 }, { x: -4.0, z: -21 },
     { x:  4.0, z: 2   }, { x:  5.2, z: -4  }, { x:  4.0, z: -10 },
@@ -425,13 +649,67 @@ export function buildOudWoudScene(scene) {
     { x: -14, z: -5 }, { x: -13, z: -18 }, { x: -12, z: -30 },
     { x: 14, z: 2 }, { x: 27, z: -35 }, { x: 27, z: -48 },
     { x: -6, z: -40 }, { x: 0, z: -51 }, { x: 29, z: -42 },
+    // ── GDP-007: Extra trees — fills perimeter and deep south ────────────
+    // Far-left column (x ≈ -17 to -15)
+    { x: -17, z:  5  }, { x: -17, z: -8  }, { x: -16, z: -20 },
+    { x: -17, z: -32 }, { x: -16, z: -44 }, { x: -17, z: -55 },
+    // Far-right column (x ≈ 31 to 34)
+    { x: 32, z:  4  }, { x: 33, z: -12 }, { x: 32, z: -26 },
+    { x: 33, z: -38 }, { x: 32, z: -50 },
+    // Deep-south back wall (z ≈ -60 to -70)
+    { x: -10, z: -61 }, { x: -2,  z: -62 }, { x:  7, z: -60 },
+    { x:  15, z: -61 }, { x: 23,  z: -63 }, { x: 30, z: -61 },
+    { x:  -7, z: -68 }, { x:  5,  z: -67 }, { x: 14, z: -68 },
+    { x:  22, z: -66 },
+    // Mid-forest gap fillers
+    { x: -7,  z: -50 }, { x: -8,  z: -59 }, { x: 31, z: -23 },
   ];
 
+  // 6 InstancedMeshes (trunk + 5 cone layers) — ~276 draw calls → 6
+  const N = treeData.length;
+  const trunkGeo = new THREE.CylinderGeometry(0.14, 0.30, 2.4, 7);
+  const coneGeos = LAYER_R.map(r => new THREE.ConeGeometry(r, 1.65, 7));
+  const trunkMat = new THREE.MeshStandardMaterial({
+    color: 0x5a3220,
+    normalMap: makeBarkNormalMap(),
+    normalScale: new THREE.Vector2(1.0, 1.0),
+    roughness: 0.95,
+  });
+  const coneMats = LAYER_COLORS.map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.82 }));
+
+  const trunkMesh = new THREE.InstancedMesh(trunkGeo, trunkMat, N);
+  trunkMesh.castShadow = true;
+  const coneMeshes = coneGeos.map((geo, i) => {
+    const m = new THREE.InstancedMesh(geo, coneMats[i], N);
+    m.castShadow = true;
+    return m;
+  });
+  const treeMeshes = [trunkMesh, ...coneMeshes];
+  treeMeshes.forEach(m => scene.add(m));
+
   const collisionCircles = [];
-  treeData.forEach(({ x, z }) => {
+  const treeTransforms = [];
+
+  treeData.forEach(({ x, z }, idx) => {
     const scale = 0.8 + Math.random() * 0.55;
-    scene.add(createTree(x, z, scale));
+    const yaw   = Math.random() * Math.PI * 2;
+    const coneYaws = Array.from({ length: 5 }, (_, i) =>
+      yaw + (i * Math.PI * 2) / 5 + Math.random() * 0.35
+    );
+    treeTransforms.push({ x, z, scale, yaw, coneYaws });
+
+    buildTreeMemberMatrix(_outM, x, z, 1.2 * scale, yaw, scale, 0);
+    trunkMesh.setMatrixAt(idx, _outM);
+    coneYaws.forEach((cy, i) => {
+      buildTreeMemberMatrix(_outM, x, z, LAYER_H[i] * scale, cy, scale, 0);
+      coneMeshes[i].setMatrixAt(idx, _outM);
+    });
     collisionCircles.push({ x, z, r: 0.58 * scale });
+  });
+
+  treeMeshes.forEach(m => {
+    m.instanceMatrix.needsUpdate = true;
+    m.computeBoundingSphere();
   });
 
   // ─── Mushrooms ──────────────────────────────────────────────────────────
@@ -501,8 +779,12 @@ export function buildOudWoudScene(scene) {
     log,
     mapFragment,
     collisionCircles,
+    treeMeshes,
+    treeTransforms,
+    waterMaterial,
     logCollision,
     rockPositions,
+    islandBounds,
     startPosition: new THREE.Vector3(0, 1.7, 7),
   };
 }

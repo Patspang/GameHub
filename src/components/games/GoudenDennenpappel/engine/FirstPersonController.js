@@ -19,6 +19,12 @@ export class FirstPersonController {
     // Collision geometry
     this.collisionCircles = []; // { x, z, r }
     this.collisionBoxes = [];   // { minX, maxX, minZ, maxZ }
+
+    // Reusable objects to avoid per-frame allocations
+    this._euler  = new THREE.Euler(0, 0, 0, 'YXZ');
+    this._forward = new THREE.Vector3();
+    this._right   = new THREE.Vector3();
+    this._move    = new THREE.Vector3();
   }
 
   addCollisionCircle(x, z, r) {
@@ -53,8 +59,9 @@ export class FirstPersonController {
     this.pitch = Math.max(-Math.PI / 5, Math.min(Math.PI / 5, this.pitch));
     this.lookDelta = { x: 0, y: 0 };
 
-    const euler = new THREE.Euler(this.pitch, this.yaw, 0, 'YXZ');
-    this.camera.quaternion.setFromEuler(euler);
+    // Reuse pre-allocated Euler — no garbage
+    this._euler.set(this.pitch, this.yaw, 0);
+    this.camera.quaternion.setFromEuler(this._euler);
 
     // Calculate movement
     const { x: jx, y: jy } = this.joystick;
@@ -62,36 +69,31 @@ export class FirstPersonController {
     this.currentSpeed = Math.min(1, Math.sqrt(jx * jx + jy * jy));
     if (jx === 0 && jy === 0) return;
 
-    // Forward vector (projected to ground plane)
-    const forward = new THREE.Vector3(
-      -Math.sin(this.yaw),
-      0,
-      -Math.cos(this.yaw)
-    );
-    const right = new THREE.Vector3(
-      Math.cos(this.yaw),
-      0,
-      -Math.sin(this.yaw)
-    );
+    // Forward/right vectors projected to ground plane — reuse pre-allocated
+    this._forward.set(-Math.sin(this.yaw), 0, -Math.cos(this.yaw));
+    this._right.set(Math.cos(this.yaw), 0, -Math.sin(this.yaw));
 
     // jy < 0 means joystick pushed up (forward)
-    const move = forward.clone()
-      .multiplyScalar(-jy)
-      .add(right.clone().multiplyScalar(jx));
+    this._move.copy(this._forward).multiplyScalar(-jy);
+    this._move.addScaledVector(this._right, jx);
 
-    if (move.length() > 0) {
-      move.normalize().multiplyScalar(this.speed * delta);
+    if (this._move.length() > 0) {
+      this._move.normalize().multiplyScalar(this.speed * delta);
     }
 
-    const newX = this.camera.position.x + move.x;
-    const newZ = this.camera.position.z + move.z;
+    const newX = this.camera.position.x + this._move.x;
+    const newZ = this.camera.position.z + this._move.z;
     const r = this.playerRadius;
 
-    // Check collision circles (trees)
+    // Check collision circles (trees) — use squared distance to avoid sqrt
     for (const c of this.collisionCircles) {
       const dx = newX - c.x;
       const dz = newZ - c.z;
-      if (Math.sqrt(dx * dx + dz * dz) < c.r + r) return;
+      const minDist = c.r + r;
+      if (dx * dx + dz * dz < minDist * minDist) {
+        c.onHit?.(newX - c.x);
+        return;
+      }
     }
 
     // Check collision boxes (log, walls)

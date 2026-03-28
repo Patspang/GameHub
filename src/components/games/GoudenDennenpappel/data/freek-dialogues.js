@@ -3,13 +3,14 @@
 
 export const OUD_WOUD_DIALOGUES = {
   intro: (name) => [
+    'Hoofdstuk 1: Het Oude Woud',
     `Hoi ${name}! Ik ben Freek.`,
+    'Dit is het eerste hoofdstuk van ons avontuur.',
+    'Zoek de drie paddenstoelen en vind het eerste stukje van de schatkaart.',
     'Ik ben boswachter. Ik ken dit bos goed.',
     'Er is iets bijzonders verstopt in dit bos.',
     'Het heet de Gouden Dennenpappel.',
     'Maar ik heb jouw hulp nodig!',
-    'Zoek de drie rode paddenstoelen.',
-    'Daarna laat ik je zien wat je moet doen.',
     'Succes! Je kunt het!',
   ],
 

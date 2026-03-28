@@ -11,6 +11,13 @@ export class InteractionSystem {
     this.origin = new THREE.Vector2(0, 0); // screen center
     this.entries = []; // { object3d, callback, label }
     this.current = null;
+
+    // Reusable state to avoid per-frame closure allocations
+    this._meshList = [];
+    this._currentEntry = null;
+    this._traverseFn = (child) => {
+      if (child.isMesh) this._meshList.push({ mesh: child, entry: this._currentEntry });
+    };
   }
 
   // Register an interactable object (Mesh or Group)
@@ -35,31 +42,30 @@ export class InteractionSystem {
 
     this.raycaster.setFromCamera(this.origin, this.camera);
 
-    // Build flat mesh list with back-references to their entry
-    const meshList = [];
+    // Reuse pre-allocated array — no per-frame garbage
+    this._meshList.length = 0;
     for (const entry of this.entries) {
       if (!entry.object3d.visible) continue;
       if (entry.object3d.isMesh) {
-        meshList.push({ mesh: entry.object3d, entry });
+        this._meshList.push({ mesh: entry.object3d, entry });
       } else {
-        entry.object3d.traverse((child) => {
-          if (child.isMesh) meshList.push({ mesh: child, entry });
-        });
+        this._currentEntry = entry;
+        entry.object3d.traverse(this._traverseFn);
       }
     }
 
-    if (meshList.length === 0) {
+    if (this._meshList.length === 0) {
       this.current = null;
       return null;
     }
 
     const hits = this.raycaster.intersectObjects(
-      meshList.map((m) => m.mesh),
+      this._meshList.map((m) => m.mesh),
       false
     );
 
     if (hits.length > 0) {
-      const found = meshList.find((m) => m.mesh === hits[0].object);
+      const found = this._meshList.find((m) => m.mesh === hits[0].object);
       this.current = found?.entry ?? null;
     } else {
       this.current = null;

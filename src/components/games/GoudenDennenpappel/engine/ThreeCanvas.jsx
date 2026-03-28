@@ -35,7 +35,7 @@ export function ThreeCanvas({ onReady, onFrame }) {
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.9;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -53,7 +53,7 @@ export function ThreeCanvas({ onReady, onFrame }) {
     const sun = new THREE.DirectionalLight(0xffd070, 1.8);
     sun.position.set(15, 35, 15);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.mapSize.set(1024, 1024);
     sun.shadow.camera.near = 0.5;
     sun.shadow.camera.far = 120;
     sun.shadow.camera.left = -50;
@@ -98,6 +98,22 @@ export function ThreeCanvas({ onReady, onFrame }) {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
+
+      // Dispose all GPU resources to prevent memory leaks when the component unmounts
+      scene.traverse((obj) => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach((m) => {
+            // Dispose any textures referenced by the material
+            Object.values(m).forEach((v) => {
+              if (v?.isTexture) v.dispose();
+            });
+            m.dispose();
+          });
+        }
+      });
+
       renderer.dispose();
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);

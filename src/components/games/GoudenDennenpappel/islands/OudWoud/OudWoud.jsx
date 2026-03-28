@@ -3,15 +3,51 @@
 // All game logic lives here; Three.js objects are in OudWoudScene.js
 
 import { useState, useRef, useCallback } from 'react';
+import * as THREE from 'three';
 import { ThreeCanvas } from '../../engine/ThreeCanvas';
 import { FirstPersonController } from '../../engine/FirstPersonController';
-import { buildOudWoudScene } from './OudWoudScene';
+import { buildOudWoudScene, applyTreeWobble } from './OudWoudScene';
 import { DialogueBox } from '../../ui/DialogueBox';
 import { CollectableHUD } from '../../ui/CollectableHUD';
 import { TouchControls } from '../../ui/TouchControls';
 import { OUD_WOUD_DIALOGUES } from '../../data/freek-dialogues';
 
+// GDP-003: Generate a sky PMREM env map at load time so all PBR surfaces pick up
+// sky-blue/warm indirect bounce light. One-time GPU cost; generator is disposed
+// immediately after so it doesn't hold extra GPU memory.
+function buildSkyEnvMap(renderer) {
+  // Small gradient canvas — equirectangular: top row = zenith, bottom = nadir
+  const w = 64, h = 32;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0,    '#3a8bbf'); // deep sky blue overhead
+  grad.addColorStop(0.38, '#7ec8e3'); // light sky at mid-altitude
+  grad.addColorStop(0.50, '#e8c88a'); // warm golden horizon
+  grad.addColorStop(1,    '#8b6020'); // warm ground bounce
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  const srcTex = new THREE.CanvasTexture(canvas);
+  srcTex.mapping = THREE.EquirectangularReflectionMapping;
+  srcTex.colorSpace = THREE.SRGBColorSpace;
+
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  const rt = pmrem.fromEquirectangular(srcTex);
+
+  // Free generator + source texture; the render-target texture stays on GPU
+  srcTex.dispose();
+  pmrem.dispose();
+
+  return rt; // caller sets scene.environment = rt.texture
+}
+
 const COLLECT_RADIUS = 1.8; // walk through to collect
+const COLLECT_RADIUS_SQ = COLLECT_RADIUS * COLLECT_RADIUS;
 const LOG_PROXIMITY = 2.5;  // walk into log to push it
 
 const TOTAL_MUSHROOMS = 3;
@@ -26,6 +62,7 @@ export function OudWoud({ playerName, onComplete, onExit }) {
   const controllerRef = useRef(null);
   const sceneObjectsRef = useRef(null);
   const logBoxIndexRef = useRef(-1);
+  const wobbleMapRef = useRef(new Map()); // treeIdx (number) -> { startTime, sign }
   const allMushroomsFoundRef = useRef(false);
   const logRolledRef = useRef(false);
 
@@ -65,6 +102,7 @@ export function OudWoud({ playerName, onComplete, onExit }) {
 
   // --- Callback refs (called from proximity checks, need latest state) ---
   const collectedMushroomsRef = useRef(new Set());
+  const pendingDialogueRef = useRef(null); // debounce dialogue updates
 
   // Mushroom collect callback — stored in ref so it's always current
   const collectMushroomRef = useRef(null);
@@ -80,24 +118,35 @@ export function OudWoud({ playerName, onComplete, onExit }) {
       const next = prev + 1;
       if (next === TOTAL_MUSHROOMS) {
         allMushroomsFoundRef.current = true;
-        setTimeout(() => {
+        // Debounce: only queue one dialogue update, cancel any pending
+        if (pendingDialogueRef.current) {
+          cancelAnimationFrame(pendingDialogueRef.current);
+        }
+        pendingDialogueRef.current = requestAnimationFrame(() => {
           setDialogue({
             lines: OUD_WOUD_DIALOGUES.allMushrooms,
             index: 0,
             onDone: null,
+            centered: true,
           });
-        }, 0);
+          pendingDialogueRef.current = null;
+        });
       } else {
         const lines = OUD_WOUD_DIALOGUES.mushroomFound(next);
         if (lines) {
-          setTimeout(() => {
+          // Debounce dialogue updates
+          if (pendingDialogueRef.current) {
+            cancelAnimationFrame(pendingDialogueRef.current);
+          }
+          pendingDialogueRef.current = requestAnimationFrame(() => {
             setDialogue({
               lines,
               index: 0,
               onDone: null,
               autoClose: 5000,
             });
-          }, 0);
+            pendingDialogueRef.current = null;
+          });
         }
       }
       return next;
@@ -146,7 +195,6 @@ export function OudWoud({ playerName, onComplete, onExit }) {
     };
 
     setLogRolled(true);
-    setDialogue({ lines: OUD_WOUD_DIALOGUES.logRolled, index: 0, onDone: null });
   };
 
   // Fragment pickup callback
@@ -157,32 +205,54 @@ export function OudWoud({ playerName, onComplete, onExit }) {
     fragmentCollectedRef.current = true;
     const frag = sceneObjectsRef.current?.mapFragment;
     if (frag) frag.visible = false;
-    setDialogue({ lines: OUD_WOUD_DIALOGUES.complete, index: 0, onDone: onComplete });
+    setDialogue({ lines: OUD_WOUD_DIALOGUES.complete, index: 0, onDone: onComplete, centered: true });
   };
 
   // --- Three.js setup (called once when canvas is ready) ---
   const handleReady = useCallback(
-    ({ scene, camera }) => {
+    ({ scene, camera, renderer }) => {
       const objects = buildOudWoudScene(scene);
       sceneObjectsRef.current = objects;
+
+      // GDP-003: Apply sky env map so all PBR surfaces get sky-blue/warm bounce light
+      const envRT = buildSkyEnvMap(renderer);
+      scene.environment = envRT.texture;
 
       // Position camera at start
       camera.position.copy(objects.startPosition);
 
       // First-person controller with collision data
       const controller = new FirstPersonController(camera);
-      objects.collisionCircles.forEach(({ x, z, r }) =>
-        controller.addCollisionCircle(x, z, r)
-      );
+      objects.collisionCircles.forEach((c, i) => {
+        const treeIdx = i;
+        c.onHit = (relX) => {
+          if (!wobbleMapRef.current.has(treeIdx)) {
+            wobbleMapRef.current.set(treeIdx, { startTime: performance.now(), sign: relX >= 0 ? 1 : -1 });
+          }
+        };
+        controller.addCollisionCircle(c.x, c.z, c.r);
+        // Patch onHit onto the controller's circle entry so it fires during update()
+        const entry = controller.collisionCircles[controller.collisionCircles.length - 1];
+        entry.onHit = c.onHit;
+      });
       const { minX, maxX, minZ, maxZ } = objects.logCollision;
       logBoxIndexRef.current = controller.addCollisionBox(minX, maxX, minZ, maxZ);
+
+      // Island boundary walls — invisible thick boxes outside the play area
+      const b = objects.islandBounds;
+      controller.addCollisionBox(-500,    b.minX, -500,    500);    // west
+      controller.addCollisionBox(b.maxX,  500,    -500,    500);    // east
+      controller.addCollisionBox(-500,    500,    b.maxZ,  500);    // north
+      controller.addCollisionBox(-500,    500,    -500,    b.minZ); // south
+
       controllerRef.current = controller;
 
-      // Intro dialogue
+      // Intro dialogue — centered instruction mode
       setDialogue({
         lines: OUD_WOUD_DIALOGUES.intro(playerName),
         index: 0,
         onDone: null,
+        centered: true,
       });
     },
     [playerName]
@@ -194,6 +264,12 @@ export function OudWoud({ playerName, onComplete, onExit }) {
 
     const objects = sceneObjectsRef.current;
     if (!objects || !camera) return;
+
+    // Animate water texture offset for a gentle rippling effect
+    if (objects.waterMaterial?.map) {
+      objects.waterMaterial.map.offset.x += delta * 0.012;
+      objects.waterMaterial.map.offset.y += delta * 0.008;
+    }
 
     // Animate log rolling
     const anim = logAnimRef.current;
@@ -212,11 +288,12 @@ export function OudWoud({ playerName, onComplete, onExit }) {
     const pz = camera.position.z;
 
     // Proximity-based walk-through collection for mushrooms
+    // Optimized: only check and call once per mushroom per frame (avoid redundant proximity checks)
     objects.mushrooms.forEach((m, i) => {
-      if (!m.visible) return;
+      if (!m.visible || collectedMushroomsRef.current.has(i)) return;
       const dx = px - m.position.x;
       const dz = pz - m.position.z;
-      if (Math.sqrt(dx * dx + dz * dz) < COLLECT_RADIUS) {
+      if (dx * dx + dz * dz < COLLECT_RADIUS_SQ) {
         collectMushroomRef.current?.(i);
       }
     });
@@ -233,11 +310,23 @@ export function OudWoud({ playerName, onComplete, onExit }) {
       }
     }
 
+    // Wobble animations for bumped trees — updates InstancedMesh matrices per wobbling tree
+    wobbleMapRef.current.forEach((wobble, treeIdx) => {
+      const t = (performance.now() - wobble.startTime) / 700;
+      if (t >= 1) {
+        applyTreeWobble(objects.treeMeshes, objects.treeTransforms, treeIdx, 0);
+        wobbleMapRef.current.delete(treeIdx);
+        return;
+      }
+      const wobbleZ = wobble.sign * Math.sin(t * Math.PI * 4) * 0.14 * (1 - t);
+      applyTreeWobble(objects.treeMeshes, objects.treeTransforms, treeIdx, wobbleZ);
+    });
+
     // Map fragment (only after log is rolled)
     if (logRolledRef.current && objects.mapFragment.visible) {
       const fx = px - objects.mapFragment.position.x;
       const fz = pz - objects.mapFragment.position.z;
-      if (Math.sqrt(fx * fx + fz * fz) < COLLECT_RADIUS) {
+      if (fx * fx + fz * fz < COLLECT_RADIUS_SQ) {
         pickupFragmentRef.current?.();
       }
     }
@@ -309,12 +398,14 @@ export function OudWoud({ playerName, onComplete, onExit }) {
       </div>
 
       {/* Touch controls (joystick + look + action button) */}
+      {/* Raise joystick when a bottom-bar dialogue is visible so it doesn't overlap */}
       <TouchControls
         onJoystick={handleJoystick}
         onLook={handleLook}
         onInteract={() => {}}
         actionLabel={null}
         onExit={onExit}
+        joystickBottomOffset={dialogue && !dialogue.centered ? 115 : 50}
       />
 
       {/* Freek dialogue box */}
@@ -323,6 +414,7 @@ export function OudWoud({ playerName, onComplete, onExit }) {
           line={dialogue.lines[dialogue.index]}
           onNext={advanceDialogue}
           isLast={dialogue.index === dialogue.lines.length - 1}
+          centered={!!dialogue.centered}
         />
       )}
     </div>

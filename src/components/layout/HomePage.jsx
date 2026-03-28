@@ -19,7 +19,7 @@ function isNewGame(game) {
 }
 
 export function HomePage({ onSelectGame, highScores, playCounts, playerName, onNameSet }) {
-  const [nameInput, setNameInput] = useState('');
+  const [nameInput, setNameInput] = useState(playerName || '');
   const showNamePopup = !playerName;
 
   const handleSubmitName = () => {

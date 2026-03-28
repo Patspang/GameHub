@@ -5,7 +5,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onExit }) {
+export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onExit, joystickBottomOffset = 50 }) {
   const containerRef = useRef(null);
   const joystickRef = useRef(null); // { id, startX, startY }
   const lookRef = useRef(null);     // { id, lastX, lastY }
@@ -87,11 +87,8 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      style={{ position: 'absolute', inset: 0, touchAction: 'none', zIndex: 15 }}
-    >
-      {/* Back button */}
+    <>
+      {/* Back button — outside touch capture div so clicks always fire */}
       <button
         onClick={onExit}
         style={{
@@ -106,17 +103,50 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
           fontSize: 15,
           fontFamily: 'system-ui, sans-serif',
           cursor: 'pointer',
-          zIndex: 20,
+          zIndex: 30,
+          touchAction: 'auto',
         }}
       >
         ← Terug
       </button>
 
+      {/* Action button — outside touch capture div */}
+      {actionLabel && (
+        <button
+          onClick={onInteract}
+          style={{
+            position: 'absolute',
+            bottom: 44,
+            right: 44,
+            background: '#f5a623',
+            color: '#1a0a00',
+            border: 'none',
+            borderRadius: 40,
+            padding: '16px 22px',
+            fontSize: 17,
+            fontWeight: 'bold',
+            fontFamily: 'system-ui, sans-serif',
+            cursor: 'pointer',
+            boxShadow: '0 4px 24px rgba(245,166,35,0.5)',
+            zIndex: 30,
+            touchAction: 'auto',
+            animation: 'gdp-pulse 1.2s ease-in-out infinite',
+          }}
+        >
+          {actionLabel}
+        </button>
+      )}
+
+      <div
+        ref={containerRef}
+        style={{ position: 'absolute', inset: 0, touchAction: 'none', zIndex: 15 }}
+      >
+
       {/* Joystick ring indicator (bottom-left, pointer-events none) */}
       <div
         style={{
           position: 'absolute',
-          bottom: 50,
+          bottom: joystickBottomOffset,
           left: 50,
           width: 90,
           height: 90,
@@ -127,6 +157,7 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          transition: 'bottom 0.2s ease',
         }}
       >
         <div
@@ -154,32 +185,6 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
         Veeg om te kijken
       </div>
 
-      {/* Action button — only shown when near interactable */}
-      {actionLabel && (
-        <button
-          onClick={onInteract}
-          style={{
-            position: 'absolute',
-            bottom: 44,
-            right: 44,
-            background: '#f5a623',
-            color: '#1a0a00',
-            border: 'none',
-            borderRadius: 40,
-            padding: '16px 22px',
-            fontSize: 17,
-            fontWeight: 'bold',
-            fontFamily: 'system-ui, sans-serif',
-            cursor: 'pointer',
-            boxShadow: '0 4px 24px rgba(245,166,35,0.5)',
-            zIndex: 25,
-            animation: 'gdp-pulse 1.2s ease-in-out infinite',
-          }}
-        >
-          {actionLabel}
-        </button>
-      )}
-
       {/* CSS animation for action button */}
       <style>{`
         @keyframes gdp-pulse {
@@ -187,6 +192,7 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
           50% { transform: scale(1.07); }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

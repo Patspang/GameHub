@@ -1,7 +1,111 @@
-// Freek's dialogue box — dark wooden bottom bar matching the reference design.
-// Full-width panel with character portrait, name label, text, and next button.
+// Freek's dialogue box — two modes:
+// centered=true  → Freek intro/instruction: large modal in the center of the screen
+// centered=false → In-game remark: compact dark bar at the bottom
 
-export function DialogueBox({ line, onNext, isLast }) {
+export function DialogueBox({ line, onNext, isLast, centered }) {
+  if (centered) {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(0,0,0,0.55)',
+          zIndex: 30,
+          userSelect: 'none',
+          padding: 24,
+        }}
+      >
+        <div
+          style={{
+            background: 'linear-gradient(160deg, #2e1e0a 0%, #1a0e05 100%)',
+            border: '3px solid #7a5a2e',
+            borderRadius: 20,
+            padding: '28px 28px 24px',
+            maxWidth: 480,
+            width: '100%',
+            boxShadow: '0 8px 48px rgba(0,0,0,0.75)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          {/* Character portrait */}
+          <div
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 40% 35%, #5a9c30, #2d5a1a)',
+              border: '4px solid #8ccc5c',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 44,
+              boxShadow: '0 0 20px rgba(140,204,92,0.45)',
+              flexShrink: 0,
+            }}
+          >
+            🧝
+          </div>
+
+          {/* Name */}
+          <div
+            style={{
+              color: '#8ccc5c',
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 2,
+              textTransform: 'uppercase',
+              fontFamily: 'system-ui, sans-serif',
+            }}
+          >
+            Freek
+          </div>
+
+          {/* Dialogue text */}
+          <div
+            style={{
+              color: '#f5f0e8',
+              fontSize: 20,
+              lineHeight: 1.55,
+              fontFamily: 'system-ui, sans-serif',
+              textAlign: 'center',
+              textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+            }}
+          >
+            {line}
+          </div>
+
+          {/* Next button */}
+          <button
+            onClick={onNext}
+            style={{
+              background: 'linear-gradient(180deg, #5a8c2a 0%, #3a6018 100%)',
+              color: '#f0f8e8',
+              border: '2px solid #8ccc5c',
+              borderRadius: 12,
+              padding: '13px 36px',
+              fontSize: 17,
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              fontFamily: 'system-ui, sans-serif',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+              marginTop: 4,
+              letterSpacing: 0.3,
+            }}
+          >
+            {isLast ? 'Oke! ✓' : 'Volgende ▶'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Bottom bar (in-game remark) ---
   return (
     <div
       style={{
