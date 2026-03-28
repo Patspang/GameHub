@@ -202,6 +202,14 @@ For `skipDifficulty` games (like BosRitje), store a single number instead: `scor
 - **No lose condition preferred** — kids always succeed eventually (encouraging)
 - **Landscape tablet:** use Tailwind `landscape:` variant for side-by-side layouts
 
+### Gouden Dennenpappel — Interaction Rules
+
+- **Walk-through interaction by default:** All collectables, puzzles, and triggers activate by the player walking into/near them (proximity-based). NO action buttons unless physically impossible to solve otherwise.
+- **Proximity radius:** `COLLECT_RADIUS` constant in each island file (default: 1.8 units).
+- **Collision boxes** are used to block the player until a condition is met, then removed so the player can walk through.
+- **Dialogue triggers** fire automatically on proximity events (collecting, solving).
+- **Only use buttons** for UI-level actions (exit, dialogue advance) — never for in-world game interactions.
+
 ### Step 6: Update Analytics Tracking
 
 **IMPORTANT:** For every significant change — new game, new button, new user flow — update the GA4 tracking. This is NOT optional.

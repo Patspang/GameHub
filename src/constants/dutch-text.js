@@ -402,4 +402,43 @@ export const DUTCH_TEXT = {
       tryAgain: 'Bijna! Probeer nog eens!',
     },
   },
+  goudenDennenpappel: {
+    name: 'De Gouden Dennenpappel',
+    nameEntry: {
+      title: 'Hoe heet jij?',
+      placeholder: 'Jouw naam',
+      button: 'Ga verder!',
+    },
+    worldMap: {
+      title: 'Waar ga je heen?',
+      locked: 'Nog op slot',
+      completed: 'Klaar!',
+    },
+    freek: {
+      intro: 'Hoi! Ik ben Freek. Ik pas op dit bos. Jij kan mij helpen!',
+      quest: 'Wij zoeken de Gouden Dennenpappel. Die is heel bijzonder!',
+      islandOudWoudIntro: 'Dit bos heet het Oude Woud. Het pad is dicht. Duw de stammen in het water!',
+      firstMushroom: 'Goed zo! Die paddenstoel heeft een hint. Zoek er nog meer!',
+      allMushrooms: 'Super! Je hebt ze allemaal! Nu de brug!',
+      firstLog: 'Ja! Nog twee stammen. Dan is de brug klaar!',
+      bridgeDone: 'De brug is klaar! Ga naar de uitgang!',
+      islandComplete: 'Geweldig! Je hebt een stuk van de kaart gevonden! Top!',
+    },
+    hud: {
+      mushrooms: 'Paddenstoelen',
+      exit: 'Uitgang',
+    },
+    islandComplete: {
+      title: 'Eiland klaar!',
+      mapFragment: 'Je hebt een kaartfragment gevonden!',
+      button: 'Terug naar de kaart',
+    },
+    islands: {
+      oudWoud: 'Het Oude Woud',
+      zonnigeWeide: 'De Zonnige Weide',
+      hetBeekje: 'Het Beekje',
+      oudeBoerderij: 'De Oude Boerderij',
+      topVanDeHeuvel: 'De Top van de Heuvel',
+    },
+  },
 };

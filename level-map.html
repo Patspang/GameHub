@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Het Oude Woud — Level Kaart</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a2a10; font-family: system-ui, sans-serif; color: #fff; }
+  h1 { text-align: center; padding: 16px; color: #f0d060; font-size: 20px; }
+  #wrap { display: flex; gap: 16px; padding: 0 16px 16px; align-items: flex-start; flex-wrap: wrap; }
+  canvas { border: 2px solid #7ccc5c; border-radius: 8px; display: block; cursor: crosshair; }
+  #legend { background: rgba(0,0,0,0.5); border: 2px solid #7ccc5c; border-radius: 8px; padding: 14px 18px; min-width: 200px; }
+  #legend h2 { color: #f0d060; font-size: 14px; margin-bottom: 10px; }
+  .leg { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 13px; }
+  .dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; }
+  .rect { width: 16px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  #coords { margin-top: 12px; padding-top: 10px; border-top: 1px solid #7ccc5c; font-size: 12px; color: #a8e080; min-height: 20px; }
+  #info { margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+</style>
+</head>
+<body>
+<h1>🗺️ Het Oude Woud — Level Kaart (spelersperspectief)</h1>
+<div id="wrap">
+  <canvas id="map" width="520" height="780"></canvas>
+  <div id="legend">
+    <h2>Legenda</h2>
+    <div class="leg"><div class="dot" style="background:#9b7c56"></div> Pad</div>
+    <div class="leg"><div class="dot" style="background:#2a5e1e; border: 2px solid #4a9e3e"></div> Boom</div>
+    <div class="leg"><div class="dot" style="background:#dd1111; border: 2px solid #ff4444"></div> 🍄 Paddenstoel</div>
+    <div class="leg"><div class="dot" style="background:#7a4a28; border: 2px solid #aa6a48; border-radius:3px; height:10px; width:18px"></div> Boomstam</div>
+    <div class="leg"><div class="dot" style="background:#ffcc44; border: 2px solid #ffee88"></div> 📜 Kaartfragment</div>
+    <div class="leg"><div class="dot" style="background:#3388ff"></div> 👤 Startpositie</div>
+    <div class="leg"><div class="dot" style="background:#888"></div> Rots</div>
+    <br>
+    <div id="coords">Beweeg muis over kaart...</div>
+    <div id="info">
+      Perspectief: speler kijkt omhoog<br>
+      Links/rechts = zoals in het spel<br>
+      Raster: 1 vakje = 2 eenheden<br>
+      Muis = ziet coördinaten
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('map');
+const ctx = canvas.getContext('2d');
+const coordsEl = document.getElementById('coords');
+
+// World bounds we want to show: x: -18 to 32, z: 10 to -62
+const WORLD = { xMin: -18, xMax: 32, zMin: -62, zMax: 10 };
+const W = canvas.width;
+const H = canvas.height;
+const GRID = 2; // world units per grid cell
+
+function wx(x) { return (x - WORLD.xMin) / (WORLD.xMax - WORLD.xMin) * W; }
+function wz(z) { return (z - WORLD.zMin) / (WORLD.zMax - WORLD.zMin) * H; } // start (z=7) at bottom, deep forest at top
+function wu(u) { return u / (WORLD.xMax - WORLD.xMin) * W; } // world units to px
+
+// ── Data (mirrors OudWoudScene.js) ──────────────────────────────────────────
+
+const path1   = { x: 0,  z: -7,  w: 4, h: 30 }; // centered
+const bend    = { x: 7,  z: -27, w: 14, h: 10, label: 'Bocht' };
+const path2   = { x: 14, z: -45, w: 4, h: 26 };
+
+const trees = [
+  {x:-4,z:3},{x:-5,z:-3},{x:-4,z:-9},{x:-5,z:-15},{x:-4,z:-20},
+  {x:4,z:3},{x:5,z:-3},{x:4,z:-9},{x:5,z:-15},{x:4,z:-20},
+  {x:2,z:-25},{x:12,z:-24},{x:4,z:-30},{x:12,z:-30},
+  {x:10,z:-35},{x:9,z:-41},{x:10,z:-47},{x:9,z:-53},
+  {x:18,z:-35},{x:19,z:-41},{x:18,z:-47},{x:19,z:-53},
+  {x:-9,z:0},{x:9,z:0},{x:-8,z:-8},{x:8,z:-8},
+  {x:-10,z:-16},{x:-7,z:-24},
+  {x:-3,z:-28},{x:16,z:-22},{x:-2,z:-34},
+  {x:5,z:-38},{x:23,z:-38},{x:6,z:-46},{x:22,z:-46},
+  {x:5,z:-54},{x:23,z:-54},
+  {x:-14,z:-5},{x:-13,z:-18},{x:-12,z:-30},
+  {x:14,z:2},{x:26,z:-35},{x:26,z:-48},
+  {x:-6,z:-40},{x:0,z:-50},{x:28,z:-42},
+];
+
+const mushrooms = [
+  { x:10,   z:-7,    n:1 },
+  { x:-9.5, z:-30,   n:2 },
+  { x:25.9, z:-37.8, n:3 },
+];
+
+const log = { x:14, z:-50, w:5.5 }; // half-length each side
+const logBox = { minX:11, maxX:17, minZ:-51.2, maxZ:-48.8 };
+const mapFrag = { x:14, z:-53 };
+const start = { x:0, z:7 };
+const rocks = [
+  [-2,-1],[3,-6],[-4,-13],[2,-18],[-1,-23],
+  [6,-26],[11,-33],[16,-39],[12,-44],
+  [11,-57],[16,-57],[8,-35],[20,-50],
+];
+const gates = [{x:-2.2,z:5},{x:2.2,z:5}];
+
+// ── Draw ────────────────────────────────────────────────────────────────────
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Ground
+  ctx.fillStyle = '#3a6e28';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let x = WORLD.xMin; x <= WORLD.xMax; x += GRID) {
+    ctx.beginPath(); ctx.moveTo(wx(x),0); ctx.lineTo(wx(x),H); ctx.stroke();
+  }
+  for (let z = WORLD.zMin; z <= WORLD.zMax; z += GRID) {
+    ctx.beginPath(); ctx.moveTo(0,wz(z)); ctx.lineTo(W,wz(z)); ctx.stroke();
+  }
+
+  // Grid labels (every 4 units)
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.font = '9px system-ui';
+  ctx.textAlign = 'center';
+  for (let x = WORLD.xMin; x <= WORLD.xMax; x += 4) {
+    ctx.fillText(x, wx(x), H - 3);
+  }
+  ctx.textAlign = 'right';
+  for (let z = WORLD.zMin; z <= WORLD.zMax; z += 4) {
+    ctx.fillText(z, 22, wz(z) + 3);
+  }
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.font = 'bold 10px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('← links     rechts →', W / 2, H - 6);
+  ctx.textAlign = 'right';
+  ctx.fillText('z', 18, 12);
+
+  // ── Path sections ──
+  ctx.fillStyle = '#9b7c56';
+
+  // Section 1: x=-2..2, z=8..-25 (overlaps bend by 3)
+  ctx.fillRect(wx(-2), wz(8), wx(2)-wx(-2), wz(-25)-wz(8));
+
+  // Section 2: x=12..16, z=-29..-58 (overlaps bend by 3)
+  ctx.fillRect(wx(12), wz(-29), wx(16)-wx(12), wz(-58)-wz(-29));
+
+  // Bend: rotated rect center (7,-27), width=6, height=20
+  // Direction (0,-22)->(14,-32): normalized (0.8139, -0.5812)
+  {
+    const cx = wx(7), cz = wz(-27);
+    const dx = wx(7 + 0.8139) - wx(7);
+    const dz = wz(-27 - 0.5812) - wz(-27);
+    const px = wx(7 + 0.5812) - wx(7);
+    const pz = wz(-27 + 0.8139) - wz(-27);
+    const hl = 10, hw = 3; // half-length=10 (20/2), half-width=3 (6/2)
+
+    const corners = [
+      [cx + hl*dx + hw*px, cz + hl*dz + hw*pz],
+      [cx + hl*dx - hw*px, cz + hl*dz - hw*pz],
+      [cx - hl*dx - hw*px, cz - hl*dz - hw*pz],
+      [cx - hl*dx + hw*px, cz - hl*dz + hw*pz],
+    ];
+    ctx.beginPath();
+    ctx.moveTo(corners[0][0], corners[0][1]);
+    corners.slice(1).forEach(([x, y]) => ctx.lineTo(x, y));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // ── Section labels ──
+  ctx.fillStyle = 'rgba(255,230,100,0.55)';
+  ctx.font = 'bold 11px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('Sectie 1', wx(0), wz(-4));
+  ctx.fillText('Bocht', wx(7), wz(-27));
+  ctx.fillText('Sectie 2', wx(14), wz(-39));
+
+  // ── Rocks ──
+  rocks.forEach(([rx,rz]) => {
+    ctx.beginPath();
+    ctx.arc(wx(rx), wz(rz), wu(0.35), 0, Math.PI*2);
+    ctx.fillStyle = '#777';
+    ctx.fill();
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  // ── Trees ──
+  trees.forEach(t => {
+    const tx = wx(t.x), tz = wz(t.z), r = wu(1.0);
+    // Shadow
+    ctx.beginPath();
+    ctx.arc(tx+2, tz+2, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fill();
+    // Dark outer ring
+    ctx.beginPath();
+    ctx.arc(tx, tz, r, 0, Math.PI*2);
+    ctx.fillStyle = '#1e4a12';
+    ctx.fill();
+    // Inner canopy
+    ctx.beginPath();
+    ctx.arc(tx, tz, r*0.65, 0, Math.PI*2);
+    ctx.fillStyle = '#3a7a20';
+    ctx.fill();
+    // Highlight
+    ctx.beginPath();
+    ctx.arc(tx - r*0.2, tz - r*0.2, r*0.25, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(120,220,80,0.35)';
+    ctx.fill();
+  });
+
+  // ── Gate posts ──
+  gates.forEach(g => {
+    ctx.beginPath();
+    ctx.arc(wx(g.x), wz(g.z), wu(0.3), 0, Math.PI*2);
+    ctx.fillStyle = '#6b3a2a';
+    ctx.fill();
+    ctx.strokeStyle = '#aa6644';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // ── Log collision preview ──
+  const lbx = wx(logBox.minX), lbw = wx(logBox.maxX)-wx(logBox.minX);
+  const lbz = wz(logBox.maxZ), lbh = wz(logBox.minZ)-wz(logBox.maxZ);
+  ctx.strokeStyle = 'rgba(255,150,50,0.5)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3,3]);
+  ctx.strokeRect(lbx, lbz, lbw, lbh);
+  ctx.setLineDash([]);
+
+  // ── Log ──
+  const lx = wx(log.x), lz = wz(log.z);
+  const halfPx = wu(log.w/2);
+  ctx.beginPath();
+  ctx.moveTo(lx - halfPx, lz - wu(0.45));
+  ctx.lineTo(lx + halfPx, lz - wu(0.45));
+  ctx.lineTo(lx + halfPx, lz + wu(0.45));
+  ctx.lineTo(lx - halfPx, lz + wu(0.45));
+  ctx.closePath();
+  ctx.fillStyle = '#7a4a28';
+  ctx.fill();
+  ctx.strokeStyle = '#aa6840';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  // Log label
+  ctx.fillStyle = '#ffcc88';
+  ctx.font = 'bold 9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('STAM', lx, lz - wu(0.8));
+
+  // ── Mushrooms ──
+  mushrooms.forEach(m => {
+    const mx = wx(m.x), mz = wz(m.z);
+    // Glow
+    const grd = ctx.createRadialGradient(mx, mz, 0, mx, mz, wu(1.8));
+    grd.addColorStop(0, 'rgba(220,60,60,0.35)');
+    grd.addColorStop(1, 'rgba(220,60,60,0)');
+    ctx.beginPath();
+    ctx.arc(mx, mz, wu(1.8), 0, Math.PI*2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    // Cap
+    ctx.beginPath();
+    ctx.arc(mx, mz, wu(0.55), 0, Math.PI*2);
+    ctx.fillStyle = '#dd1111';
+    ctx.fill();
+    ctx.strokeStyle = '#ff5555';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Stem dot
+    ctx.beginPath();
+    ctx.arc(mx, mz, wu(0.2), 0, Math.PI*2);
+    ctx.fillStyle = '#f0ead6';
+    ctx.fill();
+    // Label
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(`🍄${m.n}`, mx, mz - wu(1.0));
+  });
+
+  // ── Map fragment ──
+  const fx = wx(mapFrag.x), fz = wz(mapFrag.z);
+  const grd2 = ctx.createRadialGradient(fx, fz, 0, fx, fz, wu(2.5));
+  grd2.addColorStop(0, 'rgba(255,200,50,0.5)');
+  grd2.addColorStop(1, 'rgba(255,200,50,0)');
+  ctx.beginPath();
+  ctx.arc(fx, fz, wu(2.5), 0, Math.PI*2);
+  ctx.fillStyle = grd2;
+  ctx.fill();
+  ctx.fillStyle = '#ffcc44';
+  ctx.beginPath();
+  ctx.arc(fx, fz, wu(0.6), 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#fff8cc';
+  ctx.font = 'bold 10px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('📜', fx, fz - wu(1.2));
+
+  // ── Start position ──
+  const sx = wx(start.x), sz = wz(start.z);
+  ctx.beginPath();
+  ctx.arc(sx, sz, wu(0.6), 0, Math.PI*2);
+  ctx.fillStyle = '#3388ff';
+  ctx.fill();
+  ctx.strokeStyle = '#88ccff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = '#aaddff';
+  ctx.font = 'bold 9px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('START', sx, sz - wu(1.1));
+
+  // ── Direction indicator ──
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = 'bold 11px system-ui';
+  ctx.textAlign = 'left';
+  ctx.fillText('▲ Looprichting', 28, 20);
+}
+
+draw();
+
+// ── Mouse coordinate tooltip ──
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const px = e.clientX - rect.left;
+  const py = e.clientY - rect.top;
+  const wx_ = px / W * (WORLD.xMax - WORLD.xMin) + WORLD.xMin;
+  const wz_ = py / H * (WORLD.zMax - WORLD.zMin) + WORLD.zMin;
+  coordsEl.textContent = `Muispositie → x: ${wx_.toFixed(1)},  z: ${wz_.toFixed(1)}`;
+});
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const px = e.clientX - rect.left;
+  const py = e.clientY - rect.top;
+  const wx_ = px / W * (WORLD.xMax - WORLD.xMin) + WORLD.xMin;
+  const wz_ = py / H * (WORLD.zMax - WORLD.zMin) + WORLD.zMin;
+  const text = `x: ${wx_.toFixed(1)}, z: ${wz_.toFixed(1)}`;
+  navigator.clipboard.writeText(text).then(() => {
+    coordsEl.textContent = `✓ Gekopieerd: ${text}`;
+    setTimeout(() => { coordsEl.textContent = 'Beweeg muis over kaart...'; }, 2000);
+  });
+});
+canvas.addEventListener('mouseleave', () => {
+  coordsEl.textContent = 'Beweeg muis over kaart...';
+});
+</script>
+</body>
+</html>

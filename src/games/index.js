@@ -14,6 +14,7 @@ import { BosRitje } from '../components/games/BosRitje/BosRitje';
 import { Memory } from '../components/games/Memory/Memory';
 import { TicTacToe } from '../components/games/TicTacToe/TicTacToe';
 import { Domino } from '../components/games/Domino/Domino';
+import { GoudenDennenpappel } from '../components/games/GoudenDennenpappel/GoudenDennenpappel';
 
 export const GAMES = {
   'letter-jager': {
@@ -147,5 +148,17 @@ export const GAMES = {
     available: true,
     color: 'from-primary-green to-primary-blue',
     createdAt: '2026-03-03',
+  },
+  'gouden-dennenpappel': {
+    id: 'gouden-dennenpappel',
+    component: GoudenDennenpappel,
+    name: 'De Gouden Dennenpappel',
+    icon: '🌲',
+    description: 'Avontuur in het bos met Boswachter Freek!',
+    available: true,
+    color: 'from-primary-green to-primary-yellow',
+    skipDifficulty: true,
+    beta: true,
+    createdAt: '2026-03-27',
   },
 };

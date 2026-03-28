@@ -304,6 +304,35 @@ export const DOMINO_CONFIG = {
   },
 };
 
+export const GOUDEN_DENNENPAPPEL_CONFIG = {
+  // World grid dimensions (each island uses this tile size)
+  TILE_SIZE: 1.0,
+  GRID_COLS: 12,
+  GRID_ROWS: 12,
+
+  // Player movement smoothing (lerp factor per frame at 60fps)
+  PLAYER_LERP: 0.18,
+
+  // Milliseconds to wait after player reaches tile before accepting next input
+  MOVE_COOLDOWN: 180,
+
+  // Camera
+  CAMERA_ZOOM: 6,          // OrthographicCamera frustum half-size
+  CAMERA_ANGLE_X: 45,      // degrees above horizon
+  CAMERA_ANGLE_Y: 45,      // degrees horizontal rotation (isometric)
+
+  // Collectables
+  MUSHROOM_COUNT: 3,
+  LOG_COUNT: 3,
+
+  // Dialogue auto-advance timeout (ms) — 0 = tap to advance only
+  DIALOGUE_TIMEOUT: 0,
+
+  // Scoring
+  MUSHROOM_SCORE: 50,
+  ISLAND_COMPLETE_SCORE: 300,
+};
+
 export const SCREENS = {
   HOME: 'home',
   GAME_MENU: 'game-menu',

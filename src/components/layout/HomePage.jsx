@@ -6,6 +6,7 @@
 import { useState, useMemo } from 'react';
 import { GAMES } from '../../games';
 import { DUTCH_TEXT } from '../../constants/dutch-text';
+import { isBetaEnabled } from '../../utils/featureFlags';
 import { GameTile } from './GameTile';
 import { Button } from '../common/Button';
 
@@ -30,7 +31,8 @@ export function HomePage({ onSelectGame, highScores, playCounts, playerName, onN
 
   // Compute top 3 most-played games (only when at least 3 games have been played)
   const { topGames, remainingGames } = useMemo(() => {
-    const allGames = Object.values(GAMES);
+    const betaOn = isBetaEnabled();
+    const allGames = Object.values(GAMES).filter((g) => !g.beta || betaOn);
     const gamesWithCounts = allGames
       .filter((g) => g.available && (playCounts?.[g.id] || 0) > 0)
       .sort((a, b) => (playCounts[b.id] || 0) - (playCounts[a.id] || 0));

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SCREENS, DIFFICULTY } from './constants/gameConfig';
 import { GAMES } from './games';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -17,6 +17,16 @@ export function App() {
   // eslint-disable-next-line no-unused-vars
   const [highScores, setHighScores, refreshHighScores] = useLocalStorage('gamehub-scores', {});
   const [playCounts, setPlayCounts] = useLocalStorage('gamehub-play-counts', {});
+
+  // Handle ?enableBeta=true URL parameter (for easy iPad testing)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('enableBeta') === 'true') {
+      localStorage.setItem('__GAMEHUB_BETA_ENABLED', 'true');
+      // Remove the param from URL for cleaner history
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const incrementPlayCount = (gameId) => {
     setPlayCounts((prev) => ({
