@@ -8,8 +8,8 @@ import { Button } from '../../common/Button';
 
 const CMD_ICONS = {
   forward: '⬆️',
-  left: '⬅️',
-  right: '➡️',
+  left: '↪️', // Turn left (rotated)
+  right: '↩️', // Turn right (rotated)
 };
 
 export function CommandPanel({
@@ -72,7 +72,9 @@ export function CommandPanel({
                 : `Leeg vakje ${i + 1}`
               }
             >
-              {isFilled ? CMD_ICONS[cmd] : ''}
+              {isFilled && (cmd === 'left' || cmd === 'right') ? (
+                <span style={{ display: 'inline-block', transform: 'rotate(180deg)' }}>{CMD_ICONS[cmd]}</span>
+              ) : isFilled ? CMD_ICONS[cmd] : ''}
             </button>
           );
         })}
@@ -110,7 +112,7 @@ export function CommandPanel({
                 }
               `}
             >
-              <span className="text-2xl landscape:text-xl">⬅️</span>
+              <span className="text-2xl landscape:text-xl inline-block" style={{ transform: 'rotate(180deg)' }}>{CMD_ICONS.left}</span>
             </button>
             <button
               onClick={() => canAdd && onAddCommand('right')}
@@ -125,7 +127,7 @@ export function CommandPanel({
                 }
               `}
             >
-              <span className="text-2xl landscape:text-xl">➡️</span>
+              <span className="text-2xl landscape:text-xl inline-block" style={{ transform: 'rotate(180deg)' }}>{CMD_ICONS.right}</span>
             </button>
           </div>
 

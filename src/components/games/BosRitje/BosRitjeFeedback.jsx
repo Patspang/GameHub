@@ -5,7 +5,7 @@ import { DUTCH_TEXT } from '../../../constants/dutch-text';
 import { Button } from '../../common/Button';
 import { getStarMessage, getStepsMessage } from './scoringSystem';
 
-const CMD_ICONS = { forward: '⬆️', left: '⬅️', right: '➡️' };
+const CMD_ICONS = { forward: '⬆️', left: '↪️', right: '↩️' };
 
 export function BosRitjeFeedback({
   type,
@@ -88,7 +88,9 @@ export function BosRitjeFeedback({
 
         {collisionStep != null && (
           <p className="font-body text-text-secondary text-center mb-2">
-            Stap {collisionStep + 1}: {CMD_ICONS[collisionCommand] || '?'} → Botsing!
+            Stap {collisionStep + 1}: {(collisionCommand === 'left' || collisionCommand === 'right') ? (
+              <span style={{ display: 'inline-block', transform: 'rotate(180deg)' }}>{CMD_ICONS[collisionCommand]}</span>
+            ) : CMD_ICONS[collisionCommand] || '?'} → Botsing!
           </p>
         )}
 
