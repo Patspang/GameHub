@@ -1,7 +1,9 @@
 // Opdracht HUD — top-right wooden-themed quest panel
 // Shows mushroom collection progress + log/path status
 
-export function CollectableHUD({ mushroomCount, totalMushrooms, logRolled }) {
+import { memo } from 'react';
+
+export const CollectableHUD = memo(function CollectableHUD({ mushroomCount, totalMushrooms, logRolled }) {
   return (
     <div
       style={{
@@ -89,4 +91,4 @@ export function CollectableHUD({ mushroomCount, totalMushrooms, logRolled }) {
       </div>
     </div>
   );
-}
+});

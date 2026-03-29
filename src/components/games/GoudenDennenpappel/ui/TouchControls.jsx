@@ -3,9 +3,9 @@
 // Right 55% of screen: swipe to look around
 // Action button: appears bottom-right when near an interactable
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 
-export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onExit, joystickBottomOffset = 50 }) {
+export const TouchControls = memo(function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onExit, joystickBottomOffset = 50 }) {
   const containerRef = useRef(null);
   const joystickRef = useRef(null); // { id, startX, startY }
   const lookRef = useRef(null);     // { id, lastX, lastY }
@@ -195,4 +195,4 @@ export function TouchControls({ onJoystick, onLook, onInteract, actionLabel, onE
       </div>
     </>
   );
-}
+});

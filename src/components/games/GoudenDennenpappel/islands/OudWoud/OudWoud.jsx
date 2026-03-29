@@ -102,7 +102,6 @@ export function OudWoud({ playerName, onComplete, onExit }) {
 
   // --- Callback refs (called from proximity checks, need latest state) ---
   const collectedMushroomsRef = useRef(new Set());
-  const pendingDialogueRef = useRef(null); // debounce dialogue updates
 
   // Mushroom collect callback — stored in ref so it's always current
   const collectMushroomRef = useRef(null);
@@ -114,43 +113,35 @@ export function OudWoud({ playerName, onComplete, onExit }) {
     collectedMushroomsRef.current.add(index);
     mushroom.visible = false;
 
+    // React 18+ batches these two state updates into a single render pass
     setMushroomCount((prev) => {
       const next = prev + 1;
       if (next === TOTAL_MUSHROOMS) {
         allMushroomsFoundRef.current = true;
-        // Debounce: only queue one dialogue update, cancel any pending
-        if (pendingDialogueRef.current) {
-          cancelAnimationFrame(pendingDialogueRef.current);
-        }
-        pendingDialogueRef.current = requestAnimationFrame(() => {
-          setDialogue({
-            lines: OUD_WOUD_DIALOGUES.allMushrooms,
-            index: 0,
-            onDone: null,
-            centered: true,
-          });
-          pendingDialogueRef.current = null;
-        });
-      } else {
-        const lines = OUD_WOUD_DIALOGUES.mushroomFound(next);
-        if (lines) {
-          // Debounce dialogue updates
-          if (pendingDialogueRef.current) {
-            cancelAnimationFrame(pendingDialogueRef.current);
-          }
-          pendingDialogueRef.current = requestAnimationFrame(() => {
-            setDialogue({
-              lines,
-              index: 0,
-              onDone: null,
-              autoClose: 5000,
-            });
-            pendingDialogueRef.current = null;
-          });
-        }
       }
       return next;
     });
+
+    // Compute dialogue outside the updater — avoids scheduling a second render
+    const count = collectedMushroomsRef.current.size;
+    if (count === TOTAL_MUSHROOMS) {
+      setDialogue({
+        lines: OUD_WOUD_DIALOGUES.allMushrooms,
+        index: 0,
+        onDone: null,
+        centered: true,
+      });
+    } else {
+      const lines = OUD_WOUD_DIALOGUES.mushroomFound(count);
+      if (lines) {
+        setDialogue({
+          lines,
+          index: 0,
+          onDone: null,
+          autoClose: 5000,
+        });
+      }
+    }
   };
 
   // Log roll callback — triggered by walking into the log

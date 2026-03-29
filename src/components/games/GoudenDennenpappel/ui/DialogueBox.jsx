@@ -2,7 +2,9 @@
 // centered=true  → Freek intro/instruction: large modal in the center of the screen
 // centered=false → In-game remark: compact dark bar at the bottom
 
-export function DialogueBox({ line, onNext, isLast, centered }) {
+import { memo } from 'react';
+
+export const DialogueBox = memo(function DialogueBox({ line, onNext, isLast, centered }) {
   if (centered) {
     return (
       <div
@@ -217,4 +219,4 @@ export function DialogueBox({ line, onNext, isLast, centered }) {
       </button>
     </div>
   );
-}
+});

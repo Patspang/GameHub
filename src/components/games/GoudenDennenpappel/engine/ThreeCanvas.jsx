@@ -2,10 +2,10 @@
 // onReady(refs) is called once when scene is ready
 // onFrame(refs) is called every animation frame (via ref to prevent stale closures)
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import * as THREE from 'three';
 
-export function ThreeCanvas({ onReady, onFrame }) {
+export const ThreeCanvas = memo(function ThreeCanvas({ onReady, onFrame }) {
   const mountRef = useRef(null);
   const onReadyRef = useRef(onReady);
   const onFrameRef = useRef(onFrame);
@@ -127,4 +127,4 @@ export function ThreeCanvas({ onReady, onFrame }) {
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
     />
   );
-}
+});
