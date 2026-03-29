@@ -471,7 +471,7 @@ function createGate(scene) {
 
   // Thick Posts
   const postGeo = new THREE.CylinderGeometry(0.22, 0.28, 5.0, 8);
-  [{ x: -2.6, z: 5 }, { x: 2.6, z: 5 }].forEach(({ x, z }) => {
+  [{ x: -2.6, z: 2 }, { x: 2.6, z: 2 }].forEach(({ x, z }) => {
     const post = new THREE.Mesh(postGeo, woodMat);
     post.position.set(x, 2.5, z);
     post.castShadow = true;
@@ -485,17 +485,17 @@ function createGate(scene) {
 
   // Main crossbeam
   const beam = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.32, 0.28), woodMat);
-  beam.position.set(0, 4.82, 5);
+  beam.position.set(0, 4.82, 2);
   beam.castShadow = true;
   scene.add(beam);
 
   // Corner bracket trim
   [-2.25, 2.25].forEach((bx) => {
     const bh = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.18, 0.18), darkWoodMat);
-    bh.position.set(bx, 4.72, 5);
+    bh.position.set(bx, 4.72, 2);
     scene.add(bh);
     const bv = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.55, 0.18), darkWoodMat);
-    bv.position.set(bx + (bx < 0 ? -0.26 : 0.26), 4.5, 5);
+    bv.position.set(bx + (bx < 0 ? -0.26 : 0.26), 4.5, 2);
     scene.add(bv);
   });
 
@@ -504,7 +504,7 @@ function createGate(scene) {
   const ropeMat = makeMat(0x6a4a20, 0.8);
   [-1.8, 1.8].forEach(rx => {
     const ring = new THREE.Mesh(ropeGeo, ropeMat);
-    ring.position.set(rx, 3.7, 5);
+    ring.position.set(rx, 3.7, 2);
     ring.rotation.x = Math.PI / 2;
     scene.add(ring);
   });
@@ -548,7 +548,7 @@ function createGate(scene) {
     new THREE.PlaneGeometry(4.0, 0.9),
     new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(signCanvas), roughness: 0.7, side: THREE.DoubleSide })
   );
-  sign.position.set(0, 4.1, 4.96);
+  sign.position.set(0, 4.1, 1.96);
   scene.add(sign);
 }
 

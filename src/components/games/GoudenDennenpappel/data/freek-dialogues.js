@@ -40,3 +40,41 @@ export const OUD_WOUD_DIALOGUES = {
     'Op naar het volgende eiland!',
   ],
 };
+
+export const ZONNIGE_WEIDE_DIALOGUES = {
+  intro: (name) => [
+    'Hoofdstuk 2: De Zonnige Weide',
+    `Wat mooi hier, ${name}! Dit is mijn favoriete plek.`,
+    'Maar kijk — de vlinders zijn verdwaald!',
+    'Een grote storm blies ze allemaal door elkaar.',
+    'Elke vlinder hoort bij één bloem.',
+    'Help jij ze de weg terug te vinden?',
+  ],
+
+  butterflyApproached: [
+    'Deze vlinder zoekt zijn bloem.',
+    'Welke bloem past erbij? Kijk goed!',
+  ],
+
+  wrongMatch: [
+    'Hmm, dat klopt nog niet.',
+    'Probeer het nog een keer!',
+  ],
+
+  firstMatch: (name) => [
+    `Yes! ${name}, je deed het!`,
+    'Zoek nu de andere twee.',
+  ],
+
+  allMatched: [
+    'Alle vlinders zijn thuis!',
+    'Kijk, het kaartfragment valt uit de lucht.',
+    'Het bos is blij. Pak het op!',
+  ],
+
+  complete: [
+    'Geweldig! Fragment twee gevonden.',
+    'Er zijn er nog meer. Kijk — de kaart toont een beekje.',
+    'Op naar het volgende eiland!',
+  ],
+};

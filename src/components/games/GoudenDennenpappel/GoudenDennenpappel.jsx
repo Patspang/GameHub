@@ -8,9 +8,15 @@ import { ISLAND_REGISTRY } from './islands/island-registry';
 import { useIslandProgress } from './hooks/useIslandProgress';
 
 const NAME_KEY = 'gamehub-gouden-dennenpappel-name';
+const PLAYER_KEY = 'gamehub-player-name';
 
 function loadSavedName() {
-  try { return localStorage.getItem(NAME_KEY) || ''; } catch { return ''; }
+  try {
+    // Prefer global player name if set
+    return localStorage.getItem(PLAYER_KEY) || localStorage.getItem(NAME_KEY) || '';
+  } catch {
+    return '';
+  }
 }
 
 export function GoudenDennenpappel({ onExit }) {
