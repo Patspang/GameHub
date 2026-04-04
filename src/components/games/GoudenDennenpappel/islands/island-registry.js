@@ -3,6 +3,7 @@
 
 import { OudWoud } from './OudWoud/OudWoud';
 import { ZonnigeWeide } from './ZonnigeWeide/ZonnigeWeide';
+import { Beekje } from './Beekje/Beekje';
 
 export const ISLAND_REGISTRY = [
   {
@@ -19,6 +20,11 @@ export const ISLAND_REGISTRY = [
     description: 'Help de verdwaalde vlinders terug naar hun bloem.',
     component: ZonnigeWeide,
   },
-  // Future islands:
-  // { id: 'beekje', name: 'Het Beekje', icon: '💧', description: '...', component: Beekje },
+  {
+    id: 'beekje',
+    name: 'Hoofdstuk 3: Het Beekje',
+    icon: '💧',
+    description: 'Leg de stenen op volgorde en laat het water weer stromen.',
+    component: Beekje,
+  },
 ];

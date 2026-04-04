@@ -78,3 +78,45 @@ export const ZONNIGE_WEIDE_DIALOGUES = {
     'Op naar het volgende eiland!',
   ],
 };
+
+
+export const BEEKJE_DIALOGUES = {
+  intro: (name) => [
+    'Hoofdstuk 3: Het Beekje',
+    `O nee, ${name}. Het water staat bijna stil.`,
+    'De stenen liggen op de verkeerde plek.',
+    'Het water weet niet meer welke kant op.',
+    'Help jij de stenen op de goede volgorde te leggen?',
+    'Begin bij de kleinste!',
+  ],
+
+  firstStonePicked: [
+    'Goed zo! Je hebt een steen.',
+    'Waar hoort hij thuis?',
+  ],
+
+  wrongPlacement: [
+    'Hmm, probeer het nog een keer!',
+  ],
+
+  allStonesPlaced: [
+    'Het water stroomt weer! Hoor je dat?',
+    'Nu nog één vraag...',
+  ],
+
+  wordSolved: [
+    'Juist! Het water stroomt naar beneden.',
+    'En kijk — het kaartfragment!',
+  ],
+
+  completeSecret: (name) => [
+    `Weet je, ${name}... mijn grootmoeder kende dit beekje.`,
+    'Zij vond de Gouden Dennenpappel. Lang geleden.',
+    'Ze verstopte hem weer. Omdat het bos hem nodig had.',
+    'Jij bent de eerste die ik dit vertel.',
+  ],
+
+  toNext: [
+    'De kaart toont een boerderij. Kom, we gaan.',
+  ],
+};
